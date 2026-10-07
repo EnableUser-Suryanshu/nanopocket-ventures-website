@@ -57,7 +57,9 @@ _brief/
 /private/
 /data/
 
-# local tooling
+# local tooling (editor / AI-assistant helpers)
 .claude/
+.agents/
+skills-lock.json
 .env*
 !.env.example
