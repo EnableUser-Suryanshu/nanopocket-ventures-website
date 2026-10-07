@@ -37,7 +37,7 @@ Sign in at **/admin**.
 - **Pages → Home** — every section of the one-page site, in order. Drag to reorder, tick *“Hide this section”*
   to take it offline (e.g. Portfolio / Insights / News until they are ready). Click the **eye icon (Live Preview)**
   to see changes as you type; nothing goes public until you press **Publish changes**.
-- **Pages → Privacy / Terms / Accessibility** — legal pages (rich text).
+- **Pages → Privacy / Terms** — legal pages (rich text).
 - **Content → Team** — team members (photo, role, bio, LinkedIn). With a photo, the team card shows a full-bleed
   portrait (set the focal point in *Media* to frame the face); without one, initials are shown.
 - **Content → Insights / Us In News / Portfolio companies** — when these are empty, the site shows a designed
@@ -85,7 +85,6 @@ visitors never see a “submission could not be verified” error.
   motion, or without JavaScript) that shows the same content.
 - Type is sized with `clamp(rem…)`, so text scales with browser zoom up to 200%; layouts reflow down to 320 px.
 - Forms: visible labels, required markers, inline errors linked to fields, announced status/success messages.
-- A public **/accessibility** statement page is included (editable).
 
 ---
 

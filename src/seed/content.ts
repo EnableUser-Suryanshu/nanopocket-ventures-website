@@ -508,7 +508,6 @@ export const footer = {
   legalLinks: [
     { label: 'Privacy', href: '/privacy' },
     { label: 'Terms', href: '/terms' },
-    { label: 'Accessibility', href: '/accessibility' },
   ],
   disclaimer:
     'NanoPocket Ventures Fund is registered with SEBI as a Category I Alternative Investment Fund (Angel Fund). Investments in AIFs carry risk, including the possible loss of capital. Nothing on this website is an offer, solicitation or investment advice. Please read the fund documents carefully before investing.',
@@ -786,34 +785,6 @@ export const legalPages = [
       { h2: 'Intellectual property' },
       {
         p: 'The NanoPocket Ventures name, logo and website content may not be reproduced without permission.',
-      },
-    ]),
-  },
-  {
-    title: 'Accessibility',
-    slug: 'accessibility',
-    content: lexical([
-      {
-        p: 'NanoPocket Ventures is committed to making this website usable by everyone, including people with disabilities, in line with SEBI’s accessibility requirements for regulated entities.',
-      },
-      { h2: 'Standard' },
-      {
-        p: 'The website is designed and tested against the Web Content Accessibility Guidelines (WCAG) 2.2, level AA.',
-      },
-      { h2: 'What we have done' },
-      {
-        ul: [
-          'Text and interface colours meet WCAG AA contrast; meaning is never conveyed by colour alone (red is used only as a decorative accent).',
-          'Every function can be operated with a keyboard, with a clearly visible focus indicator and a “Skip to content” link.',
-          'Animations respect your device’s “reduce motion” setting and can be paused at any time with the motion control.',
-          'Text can be enlarged up to 200% and the layout reflows on small screens without loss of content.',
-          'Forms have visible labels, clear instructions and error messages announced to screen readers.',
-          'Images carry text alternatives; decorative illustrations are hidden from assistive technology.',
-        ],
-      },
-      { h2: 'Feedback' },
-      {
-        p: 'If you find any part of this website difficult to use, please tell us through the Reach Us section and we will respond and fix it as a priority.',
       },
     ]),
   },
