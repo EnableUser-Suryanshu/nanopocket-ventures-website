@@ -59,3 +59,5 @@ _brief/
 
 # local tooling
 .claude/
+.env*
+!.env.example
