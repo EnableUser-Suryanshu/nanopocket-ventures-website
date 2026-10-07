@@ -67,35 +67,71 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    users: User;
+    pages: Page;
+    'team-members': TeamMember;
+    insights: Insight;
+    press: Press;
+    'portfolio-companies': PortfolioCompany;
     media: Media;
+    'pitch-submissions': PitchSubmission;
+    enquiries: Enquiry;
+    'pitch-decks': PitchDeck;
+    users: User;
     'payload-kv': PayloadKv;
+    'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
   collectionsJoins: {};
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
+    'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
+    insights: InsightsSelect<false> | InsightsSelect<true>;
+    press: PressSelect<false> | PressSelect<true>;
+    'portfolio-companies': PortfolioCompaniesSelect<false> | PortfolioCompaniesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    'pitch-submissions': PitchSubmissionsSelect<false> | PitchSubmissionsSelect<true>;
+    enquiries: EnquiriesSelect<false> | EnquiriesSelect<true>;
+    'pitch-decks': PitchDecksSelect<false> | PitchDecksSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
+    'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: string;
+    defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'site-settings': SiteSetting;
+    header: Header;
+    footer: Footer;
+    'pitch-form': PitchForm;
+    'enquiry-forms': EnquiryForm;
+  };
+  globalsSelect: {
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    header: HeaderSelect<false> | HeaderSelect<true>;
+    footer: FooterSelect<false> | FooterSelect<true>;
+    'pitch-form': PitchFormSelect<false> | PitchFormSelect<true>;
+    'enquiry-forms': EnquiryFormsSelect<false> | EnquiryFormsSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
   };
   user: User;
   jobs: {
-    tasks: unknown;
+    tasks: {
+      schedulePublish: TaskSchedulePublish;
+      inline: {
+        input: unknown;
+        output: unknown;
+      };
+    };
     workflows: unknown;
   };
 }
@@ -118,11 +154,976 @@ export interface UserAuthOperations {
   };
 }
 /**
+ * Every section of the website. Open “Home” to edit the main page — use Live Preview to see changes as you type.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: number;
+  title: string;
+  /**
+   * “home” is the main page. Others become /slug (e.g. /privacy).
+   */
+  slug: string;
+  layout?:
+    | (
+        | HeroBlock
+        | StatementBlock
+        | AboutBlock
+        | CriteriaBlock
+        | ThesisBlock
+        | PortfolioBlock
+        | TeamBlock
+        | PostsBlock
+        | PitchBlock
+        | ContactBlock
+        | RichTextBlock
+      )[]
+    | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeroBlock".
+ */
+export interface HeroBlock {
+  lineOne: string;
+  highlight: string;
+  lineTwo: string;
+  /**
+   * Shown when no image is uploaded.
+   */
+  inlineArt?:
+    | (
+        | 'logo3d'
+        | 'logoWhite'
+        | 'darkLogo'
+        | 'orbitRings'
+        | 'darkRings'
+        | 'spheres'
+        | 'darkSpheres'
+        | 'ribbon'
+        | 'coins'
+        | 'monolith'
+        | 'glassSeed'
+        | 'lattice'
+        | 'pills'
+        | 'orbit'
+        | 'globe'
+        | 'wave'
+        | 'radar'
+        | 'circuit'
+        | 'nodes'
+        | 'rings'
+        | 'terrain'
+        | 'shield'
+        | 'bars'
+        | 'helix'
+        | 'seed'
+        | 'bannerGlobe'
+      )
+    | null;
+  inlineImage?: (number | null) | Media;
+  /**
+   * Short supporting line beside the gold word. Leave empty to hide.
+   */
+  subline?: string | null;
+  ctas?:
+    | {
+        label: string;
+        /**
+         * https://…, /page or #section-id
+         */
+        href: string;
+        newTab?: boolean | null;
+        variant?: ('solid' | 'outline') | null;
+        id?: string | null;
+      }[]
+    | null;
+  scrollLabel?: string | null;
+  visual?: ('showcase' | 'globe') | null;
+  /**
+   * Cards scrolling in the tilted columns. Upload an image or pick an illustration.
+   */
+  tiles?:
+    | {
+        label: string;
+        meta?: string | null;
+        /**
+         * Shown when no image is uploaded.
+         */
+        art?:
+          | (
+              | 'logo3d'
+              | 'logoWhite'
+              | 'darkLogo'
+              | 'orbitRings'
+              | 'darkRings'
+              | 'spheres'
+              | 'darkSpheres'
+              | 'ribbon'
+              | 'coins'
+              | 'monolith'
+              | 'glassSeed'
+              | 'lattice'
+              | 'pills'
+              | 'orbit'
+              | 'globe'
+              | 'wave'
+              | 'radar'
+              | 'circuit'
+              | 'nodes'
+              | 'rings'
+              | 'terrain'
+              | 'shield'
+              | 'bars'
+              | 'helix'
+              | 'seed'
+              | 'bannerGlobe'
+            )
+          | null;
+        image?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  origin?: {
+    label?: string | null;
+    lat?: number | null;
+    lng?: number | null;
+  };
+  destinations?:
+    | {
+        label: string;
+        lat: number;
+        lng: number;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Used for menu links, e.g. #home
+   */
+  anchorId: string;
+  theme: 'white' | 'light' | 'dark';
+  hidden?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'hero';
+}
+/**
+ * Images used on the website. Always describe the image in “Alt text” for screen-reader users.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  /**
+   * Describe what the image shows (required for accessibility). Use “decorative” only for purely ornamental images.
+   */
+  alt: string;
+  caption?: string | null;
+  prefix?: string | null;
+  _objectKey?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    thumb?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    wide?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StatementBlock".
+ */
+export interface StatementBlock {
+  lines?:
+    | {
+        before: string;
+        inline?: ('none' | 'caption' | 'arrow' | 'button' | 'mark') | null;
+        after?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Used by the “Small caption” element.
+   */
+  caption?: string | null;
+  /**
+   * Used by the “Button” element.
+   */
+  button?: {
+    label?: string | null;
+    /**
+     * https://…, /page or #section-id
+     */
+    href?: string | null;
+    newTab?: boolean | null;
+  };
+  /**
+   * Moving tiles revealed behind the card.
+   */
+  tiles?:
+    | {
+        label: string;
+        meta?: string | null;
+        /**
+         * Shown when no image is uploaded.
+         */
+        art?:
+          | (
+              | 'logo3d'
+              | 'logoWhite'
+              | 'darkLogo'
+              | 'orbitRings'
+              | 'darkRings'
+              | 'spheres'
+              | 'darkSpheres'
+              | 'ribbon'
+              | 'coins'
+              | 'monolith'
+              | 'glassSeed'
+              | 'lattice'
+              | 'pills'
+              | 'orbit'
+              | 'globe'
+              | 'wave'
+              | 'radar'
+              | 'circuit'
+              | 'nodes'
+              | 'rings'
+              | 'terrain'
+              | 'shield'
+              | 'bars'
+              | 'helix'
+              | 'seed'
+              | 'bannerGlobe'
+            )
+          | null;
+        image?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Used for menu links, e.g. #statement
+   */
+  anchorId: string;
+  theme: 'white' | 'light' | 'dark';
+  hidden?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'statement';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AboutBlock".
+ */
+export interface AboutBlock {
+  eyebrow?: string | null;
+  title: string;
+  tagline?: string | null;
+  paragraphs?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  facts?:
+    | {
+        label: string;
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Shown when no image is uploaded.
+   */
+  art?:
+    | (
+        | 'logo3d'
+        | 'logoWhite'
+        | 'darkLogo'
+        | 'orbitRings'
+        | 'darkRings'
+        | 'spheres'
+        | 'darkSpheres'
+        | 'ribbon'
+        | 'coins'
+        | 'monolith'
+        | 'glassSeed'
+        | 'lattice'
+        | 'pills'
+        | 'orbit'
+        | 'globe'
+        | 'wave'
+        | 'radar'
+        | 'circuit'
+        | 'nodes'
+        | 'rings'
+        | 'terrain'
+        | 'shield'
+        | 'bars'
+        | 'helix'
+        | 'seed'
+        | 'bannerGlobe'
+      )
+    | null;
+  image?: (number | null) | Media;
+  imageCaption?: string | null;
+  /**
+   * Used for menu links, e.g. #who-we-are
+   */
+  anchorId: string;
+  theme: 'white' | 'light' | 'dark';
+  hidden?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'about';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CriteriaBlock".
+ */
+export interface CriteriaBlock {
+  eyebrow?: string | null;
+  title: string;
+  tagline?: string | null;
+  ctas?:
+    | {
+        label: string;
+        /**
+         * https://…, /page or #section-id
+         */
+        href: string;
+        newTab?: boolean | null;
+        variant?: ('solid' | 'outline') | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Small text above each card title.
+   */
+  cardLabel?: string | null;
+  items?:
+    | {
+        title: string;
+        description: string;
+        /**
+         * Shown when no image is uploaded.
+         */
+        art?:
+          | (
+              | 'logo3d'
+              | 'logoWhite'
+              | 'darkLogo'
+              | 'orbitRings'
+              | 'darkRings'
+              | 'spheres'
+              | 'darkSpheres'
+              | 'ribbon'
+              | 'coins'
+              | 'monolith'
+              | 'glassSeed'
+              | 'lattice'
+              | 'pills'
+              | 'orbit'
+              | 'globe'
+              | 'wave'
+              | 'radar'
+              | 'circuit'
+              | 'nodes'
+              | 'rings'
+              | 'terrain'
+              | 'shield'
+              | 'bars'
+              | 'helix'
+              | 'seed'
+              | 'bannerGlobe'
+            )
+          | null;
+        image?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Used for menu links, e.g. #what-we-look-for
+   */
+  anchorId: string;
+  theme: 'white' | 'light' | 'dark';
+  hidden?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'criteria';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ThesisBlock".
+ */
+export interface ThesisBlock {
+  eyebrow?: string | null;
+  title: string;
+  tagline?: string | null;
+  pillars?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  facts?:
+    | {
+        label: string;
+        value: string;
+        note?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  intro?: string | null;
+  listTitle?: string | null;
+  sectors?:
+    | {
+        name: string;
+        category?: string | null;
+        summary?: string | null;
+        tags?:
+          | {
+              text: string;
+              id?: string | null;
+            }[]
+          | null;
+        notes?:
+          | {
+              label: string;
+              body: string;
+              id?: string | null;
+            }[]
+          | null;
+        /**
+         * Shown when no image is uploaded.
+         */
+        art?:
+          | (
+              | 'logo3d'
+              | 'logoWhite'
+              | 'darkLogo'
+              | 'orbitRings'
+              | 'darkRings'
+              | 'spheres'
+              | 'darkSpheres'
+              | 'ribbon'
+              | 'coins'
+              | 'monolith'
+              | 'glassSeed'
+              | 'lattice'
+              | 'pills'
+              | 'orbit'
+              | 'globe'
+              | 'wave'
+              | 'radar'
+              | 'circuit'
+              | 'nodes'
+              | 'rings'
+              | 'terrain'
+              | 'shield'
+              | 'bars'
+              | 'helix'
+              | 'seed'
+              | 'bannerGlobe'
+            )
+          | null;
+        image?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  other?: {
+    title?: string | null;
+    textBefore?: string | null;
+    link?: {
+      label?: string | null;
+      /**
+       * https://…, /page or #section-id
+       */
+      href?: string | null;
+      newTab?: boolean | null;
+    };
+    textAfter?: string | null;
+  };
+  openLabel?: string | null;
+  closeLabel?: string | null;
+  pendingLabel?: string | null;
+  ctas?:
+    | {
+        label: string;
+        /**
+         * https://…, /page or #section-id
+         */
+        href: string;
+        newTab?: boolean | null;
+        variant?: ('solid' | 'outline') | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Used for menu links, e.g. #where-we-invest
+   */
+  anchorId: string;
+  theme: 'white' | 'light' | 'dark';
+  hidden?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'thesis';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PortfolioBlock".
+ */
+export interface PortfolioBlock {
+  eyebrow?: string | null;
+  title: string;
+  tagline?: string | null;
+  highlights?:
+    | {
+        value: string;
+        label?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  pillars?:
+    | {
+        title: string;
+        body?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  showKeyNumbers?: boolean | null;
+  /**
+   * Shown where a number has not been filled in yet.
+   */
+  emptyValue?: string | null;
+  numberGroups?:
+    | {
+        title: string;
+        items?:
+          | {
+              label: string;
+              /**
+               * e.g. 12, $4.5Mn
+               */
+              value?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Lists entries from the Portfolio Companies collection.
+   */
+  showCompanies?: boolean | null;
+  companiesTitle?: string | null;
+  emptyNote?: string | null;
+  visitLabel?: string | null;
+  ctas?:
+    | {
+        label: string;
+        /**
+         * https://…, /page or #section-id
+         */
+        href: string;
+        newTab?: boolean | null;
+        variant?: ('solid' | 'outline') | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Used for menu links, e.g. #portfolio
+   */
+  anchorId: string;
+  theme: 'white' | 'light' | 'dark';
+  hidden?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'portfolio';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TeamBlock".
+ */
+export interface TeamBlock {
+  eyebrow?: string | null;
+  title: string;
+  tagline?: string | null;
+  marquee?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Leave empty to show every team member in order.
+   */
+  members?: (number | TeamMember)[] | null;
+  linkedinLabel?: string | null;
+  /**
+   * Used for menu links, e.g. #team
+   */
+  anchorId: string;
+  theme: 'white' | 'light' | 'dark';
+  hidden?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'team';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team-members".
+ */
+export interface TeamMember {
+  id: number;
+  name: string;
+  role: string;
+  bio?: string | null;
+  linkedin?: string | null;
+  /**
+   * Lower numbers appear first.
+   */
+  order?: number | null;
+  /**
+   * Square portrait works best. Without a photo, initials are shown.
+   */
+  photo?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PostsBlock".
+ */
+export interface PostsBlock {
+  source: 'insights' | 'press';
+  eyebrow?: string | null;
+  title: string;
+  tagline?: string | null;
+  limit?: number | null;
+  readLabel?: string | null;
+  emptyTitle?: string | null;
+  emptyBody?: string | null;
+  emptyLink?: {
+    label?: string | null;
+    /**
+     * https://…, /page or #section-id
+     */
+    href?: string | null;
+    newTab?: boolean | null;
+  };
+  /**
+   * Used for menu links, e.g. #insights
+   */
+  anchorId: string;
+  theme: 'white' | 'light' | 'dark';
+  hidden?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'posts';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PitchBlock".
+ */
+export interface PitchBlock {
+  eyebrow?: string | null;
+  title: string;
+  tagline?: string | null;
+  intro?: string | null;
+  note?: string | null;
+  /**
+   * Links shown under the note (e.g. to the thesis sections).
+   */
+  noteLinks?:
+    | {
+        label: string;
+        /**
+         * https://…, /page or #section-id
+         */
+        href: string;
+        newTab?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Used for menu links, e.g. #pitch-to-us
+   */
+  anchorId: string;
+  theme: 'white' | 'light' | 'dark';
+  hidden?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'pitch';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactBlock".
+ */
+export interface ContactBlock {
+  eyebrow?: string | null;
+  title: string;
+  tagline?: string | null;
+  intro?: string | null;
+  accessTitle?: string | null;
+  accessLinks?:
+    | {
+        label: string;
+        /**
+         * https://…, /page or #section-id
+         */
+        href: string;
+        newTab?: boolean | null;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Used for menu links, e.g. #reach-us
+   */
+  anchorId: string;
+  theme: 'white' | 'light' | 'dark';
+  hidden?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contact';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RichTextBlock".
+ */
+export interface RichTextBlock {
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * Used for menu links, e.g. #content
+   */
+  anchorId: string;
+  theme: 'white' | 'light' | 'dark';
+  hidden?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'richText';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "insights".
+ */
+export interface Insight {
+  id: number;
+  title: string;
+  slug: string;
+  publishedAt: string;
+  category?: string | null;
+  excerpt: string;
+  cover?: (number | null) | Media;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "press".
+ */
+export interface Press {
+  id: number;
+  title: string;
+  outlet: string;
+  publishedAt: string;
+  url: string;
+  excerpt?: string | null;
+  image?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "portfolio-companies".
+ */
+export interface PortfolioCompany {
+  id: number;
+  /**
+   * Only disclose after internal approval.
+   */
+  published?: boolean | null;
+  order?: number | null;
+  name: string;
+  sector?: string | null;
+  stage?: string | null;
+  year?: string | null;
+  description?: string | null;
+  website?: string | null;
+  logo?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Every “Pitch To Us” application lands here. Decks are stored privately — only signed-in users can open them.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pitch-submissions".
+ */
+export interface PitchSubmission {
+  id: number;
+  status?: ('new' | 'reviewing' | 'shortlisted' | 'conversation' | 'declined') | null;
+  internalNotes?: string | null;
+  startupName: string;
+  website?: string | null;
+  sector?: string | null;
+  stage?: string | null;
+  deck?: (number | null) | PitchDeck;
+  founderNames?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  vision?: string | null;
+  superiority?: string | null;
+  traction?: string | null;
+  willingnessToPay?: string | null;
+  market?: string | null;
+  defensibility?: string | null;
+  buildPlan?: string | null;
+  isFounder?: string | null;
+  readThesis?: string | null;
+  dpiit?: string | null;
+  consent?: boolean | null;
+  userAgent?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Private files — never publicly accessible.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pitch-decks".
+ */
+export interface PitchDeck {
+  id: number;
+  startupName?: string | null;
+  prefix?: string | null;
+  _objectKey?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * Messages from the “Reach Us” forms (investor queries, partnerships, media).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enquiries".
+ */
+export interface Enquiry {
+  id: number;
+  status?: ('new' | 'replied' | 'closed') | null;
+  internalNotes?: string | null;
+  type?: string | null;
+  name?: string | null;
+  email?: string | null;
+  answers?:
+    | {
+        question?: string | null;
+        answer?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  userAgent?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
-  id: string;
+  id: number;
+  name?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -130,6 +1131,7 @@ export interface User {
   resetPasswordExpiration?: string | null;
   salt?: string | null;
   hash?: string | null;
+  resetPasswordRequestedAt?: string | null;
   loginAttempts?: number | null;
   lockUntil?: string | null;
   sessions?:
@@ -144,29 +1146,10 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: string;
-  alt: string;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: string;
+  id: number;
   key: string;
   data:
     | {
@@ -180,23 +1163,147 @@ export interface PayloadKv {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs".
+ */
+export interface PayloadJob {
+  id: number;
+  /**
+   * Input data provided to the job
+   */
+  input?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  taskStatus?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  completedAt?: string | null;
+  totalTried?: number | null;
+  /**
+   * If hasError is true this job will not be retried
+   */
+  hasError?: boolean | null;
+  /**
+   * If hasError is true, this is the error that caused it
+   */
+  error?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Task execution log
+   */
+  log?:
+    | {
+        executedAt: string;
+        completedAt: string;
+        taskSlug: 'inline' | 'schedulePublish';
+        taskID: string;
+        input?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        output?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        state: 'failed' | 'succeeded';
+        error?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  taskSlug?: ('inline' | 'schedulePublish') | null;
+  queue?: string | null;
+  waitUntil?: string | null;
+  processing?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: string;
+  id: number;
   document?:
     | ({
-        relationTo: 'users';
-        value: string | User;
+        relationTo: 'pages';
+        value: number | Page;
+      } | null)
+    | ({
+        relationTo: 'team-members';
+        value: number | TeamMember;
+      } | null)
+    | ({
+        relationTo: 'insights';
+        value: number | Insight;
+      } | null)
+    | ({
+        relationTo: 'press';
+        value: number | Press;
+      } | null)
+    | ({
+        relationTo: 'portfolio-companies';
+        value: number | PortfolioCompany;
       } | null)
     | ({
         relationTo: 'media';
-        value: string | Media;
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'pitch-submissions';
+        value: number | PitchSubmission;
+      } | null)
+    | ({
+        relationTo: 'enquiries';
+        value: number | Enquiry;
+      } | null)
+    | ({
+        relationTo: 'pitch-decks';
+        value: number | PitchDeck;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
       } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -206,10 +1313,10 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: number;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   key?: string | null;
   value?:
@@ -229,7 +1336,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
+  id: number;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -237,25 +1344,499 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
+ * via the `definition` "pages_select".
  */
-export interface UsersSelect<T extends boolean = true> {
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-  sessions?:
+export interface PagesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  layout?:
     | T
     | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
+        hero?: T | HeroBlockSelect<T>;
+        statement?: T | StatementBlockSelect<T>;
+        about?: T | AboutBlockSelect<T>;
+        criteria?: T | CriteriaBlockSelect<T>;
+        thesis?: T | ThesisBlockSelect<T>;
+        portfolio?: T | PortfolioBlockSelect<T>;
+        team?: T | TeamBlockSelect<T>;
+        posts?: T | PostsBlockSelect<T>;
+        pitch?: T | PitchBlockSelect<T>;
+        contact?: T | ContactBlockSelect<T>;
+        richText?: T | RichTextBlockSelect<T>;
       };
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeroBlock_select".
+ */
+export interface HeroBlockSelect<T extends boolean = true> {
+  lineOne?: T;
+  highlight?: T;
+  lineTwo?: T;
+  inlineArt?: T;
+  inlineImage?: T;
+  subline?: T;
+  ctas?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+        newTab?: T;
+        variant?: T;
+        id?: T;
+      };
+  scrollLabel?: T;
+  visual?: T;
+  tiles?:
+    | T
+    | {
+        label?: T;
+        meta?: T;
+        art?: T;
+        image?: T;
+        id?: T;
+      };
+  origin?:
+    | T
+    | {
+        label?: T;
+        lat?: T;
+        lng?: T;
+      };
+  destinations?:
+    | T
+    | {
+        label?: T;
+        lat?: T;
+        lng?: T;
+        id?: T;
+      };
+  anchorId?: T;
+  theme?: T;
+  hidden?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StatementBlock_select".
+ */
+export interface StatementBlockSelect<T extends boolean = true> {
+  lines?:
+    | T
+    | {
+        before?: T;
+        inline?: T;
+        after?: T;
+        id?: T;
+      };
+  caption?: T;
+  button?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+        newTab?: T;
+      };
+  tiles?:
+    | T
+    | {
+        label?: T;
+        meta?: T;
+        art?: T;
+        image?: T;
+        id?: T;
+      };
+  anchorId?: T;
+  theme?: T;
+  hidden?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AboutBlock_select".
+ */
+export interface AboutBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  tagline?: T;
+  paragraphs?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  facts?:
+    | T
+    | {
+        label?: T;
+        value?: T;
+        id?: T;
+      };
+  art?: T;
+  image?: T;
+  imageCaption?: T;
+  anchorId?: T;
+  theme?: T;
+  hidden?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CriteriaBlock_select".
+ */
+export interface CriteriaBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  tagline?: T;
+  ctas?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+        newTab?: T;
+        variant?: T;
+        id?: T;
+      };
+  cardLabel?: T;
+  items?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        art?: T;
+        image?: T;
+        id?: T;
+      };
+  anchorId?: T;
+  theme?: T;
+  hidden?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ThesisBlock_select".
+ */
+export interface ThesisBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  tagline?: T;
+  pillars?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  facts?:
+    | T
+    | {
+        label?: T;
+        value?: T;
+        note?: T;
+        id?: T;
+      };
+  intro?: T;
+  listTitle?: T;
+  sectors?:
+    | T
+    | {
+        name?: T;
+        category?: T;
+        summary?: T;
+        tags?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        notes?:
+          | T
+          | {
+              label?: T;
+              body?: T;
+              id?: T;
+            };
+        art?: T;
+        image?: T;
+        id?: T;
+      };
+  other?:
+    | T
+    | {
+        title?: T;
+        textBefore?: T;
+        link?:
+          | T
+          | {
+              label?: T;
+              href?: T;
+              newTab?: T;
+            };
+        textAfter?: T;
+      };
+  openLabel?: T;
+  closeLabel?: T;
+  pendingLabel?: T;
+  ctas?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+        newTab?: T;
+        variant?: T;
+        id?: T;
+      };
+  anchorId?: T;
+  theme?: T;
+  hidden?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PortfolioBlock_select".
+ */
+export interface PortfolioBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  tagline?: T;
+  highlights?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  pillars?:
+    | T
+    | {
+        title?: T;
+        body?: T;
+        id?: T;
+      };
+  showKeyNumbers?: T;
+  emptyValue?: T;
+  numberGroups?:
+    | T
+    | {
+        title?: T;
+        items?:
+          | T
+          | {
+              label?: T;
+              value?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  showCompanies?: T;
+  companiesTitle?: T;
+  emptyNote?: T;
+  visitLabel?: T;
+  ctas?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+        newTab?: T;
+        variant?: T;
+        id?: T;
+      };
+  anchorId?: T;
+  theme?: T;
+  hidden?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TeamBlock_select".
+ */
+export interface TeamBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  tagline?: T;
+  marquee?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  members?: T;
+  linkedinLabel?: T;
+  anchorId?: T;
+  theme?: T;
+  hidden?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PostsBlock_select".
+ */
+export interface PostsBlockSelect<T extends boolean = true> {
+  source?: T;
+  eyebrow?: T;
+  title?: T;
+  tagline?: T;
+  limit?: T;
+  readLabel?: T;
+  emptyTitle?: T;
+  emptyBody?: T;
+  emptyLink?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+        newTab?: T;
+      };
+  anchorId?: T;
+  theme?: T;
+  hidden?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PitchBlock_select".
+ */
+export interface PitchBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  tagline?: T;
+  intro?: T;
+  note?: T;
+  noteLinks?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+        newTab?: T;
+        id?: T;
+      };
+  anchorId?: T;
+  theme?: T;
+  hidden?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactBlock_select".
+ */
+export interface ContactBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  tagline?: T;
+  intro?: T;
+  accessTitle?: T;
+  accessLinks?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+        newTab?: T;
+        description?: T;
+        id?: T;
+      };
+  anchorId?: T;
+  theme?: T;
+  hidden?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RichTextBlock_select".
+ */
+export interface RichTextBlockSelect<T extends boolean = true> {
+  content?: T;
+  anchorId?: T;
+  theme?: T;
+  hidden?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team-members_select".
+ */
+export interface TeamMembersSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
+  bio?: T;
+  linkedin?: T;
+  order?: T;
+  photo?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "insights_select".
+ */
+export interface InsightsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  publishedAt?: T;
+  category?: T;
+  excerpt?: T;
+  cover?: T;
+  content?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "press_select".
+ */
+export interface PressSelect<T extends boolean = true> {
+  title?: T;
+  outlet?: T;
+  publishedAt?: T;
+  url?: T;
+  excerpt?: T;
+  image?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "portfolio-companies_select".
+ */
+export interface PortfolioCompaniesSelect<T extends boolean = true> {
+  published?: T;
+  order?: T;
+  name?: T;
+  sector?: T;
+  stage?: T;
+  year?: T;
+  description?: T;
+  website?: T;
+  logo?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -263,6 +1844,114 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  caption?: T;
+  prefix?: T;
+  _objectKey?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+  sizes?:
+    | T
+    | {
+        thumb?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        card?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        wide?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pitch-submissions_select".
+ */
+export interface PitchSubmissionsSelect<T extends boolean = true> {
+  status?: T;
+  internalNotes?: T;
+  startupName?: T;
+  website?: T;
+  sector?: T;
+  stage?: T;
+  deck?: T;
+  founderNames?: T;
+  email?: T;
+  phone?: T;
+  vision?: T;
+  superiority?: T;
+  traction?: T;
+  willingnessToPay?: T;
+  market?: T;
+  defensibility?: T;
+  buildPlan?: T;
+  isFounder?: T;
+  readThesis?: T;
+  dpiit?: T;
+  consent?: T;
+  userAgent?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enquiries_select".
+ */
+export interface EnquiriesSelect<T extends boolean = true> {
+  status?: T;
+  internalNotes?: T;
+  type?: T;
+  name?: T;
+  email?: T;
+  answers?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  userAgent?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pitch-decks_select".
+ */
+export interface PitchDecksSelect<T extends boolean = true> {
+  startupName?: T;
+  prefix?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -277,11 +1966,66 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users_select".
+ */
+export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  resetPasswordRequestedAt?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
   key?: T;
   data?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs_select".
+ */
+export interface PayloadJobsSelect<T extends boolean = true> {
+  input?: T;
+  taskStatus?: T;
+  completedAt?: T;
+  totalTried?: T;
+  hasError?: T;
+  error?: T;
+  log?:
+    | T
+    | {
+        executedAt?: T;
+        completedAt?: T;
+        taskSlug?: T;
+        taskID?: T;
+        input?: T;
+        output?: T;
+        state?: T;
+        error?: T;
+        id?: T;
+      };
+  taskSlug?: T;
+  queue?: T;
+  waitUntil?: T;
+  processing?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -317,6 +2061,840 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: number;
+  siteName: string;
+  metaTitle: string;
+  metaDescription: string;
+  /**
+   * 1200 × 630 px. Falls back to a generated brand card.
+   */
+  ogImage?: (number | null) | Media;
+  investorLoginUrl?: string | null;
+  investWithUsUrl?: string | null;
+  linkedinUrl?: string | null;
+  skipToContent?: string | null;
+  menuLabel?: string | null;
+  closeLabel?: string | null;
+  motionOnLabel?: string | null;
+  motionOffLabel?: string | null;
+  backToTop?: string | null;
+  opensNewTab?: string | null;
+  viewLabel?: string | null;
+  homeLabel?: string | null;
+  notFoundTitle?: string | null;
+  notFoundBody?: string | null;
+  notFoundCta?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "header".
+ */
+export interface Header {
+  id: number;
+  /**
+   * Black buttons on the right of the header (turn red on hover). Also repeated inside the menu.
+   */
+  buttons?:
+    | {
+        label: string;
+        /**
+         * https://…, /page or #section-id
+         */
+        href: string;
+        newTab?: boolean | null;
+        /**
+         * Keep visible in the header on small screens (only one recommended).
+         */
+        showOnMobile?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  navItems?:
+    | {
+        label: string;
+        /**
+         * https://…, /page or #section-id
+         */
+        href: string;
+        newTab?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  menuEyebrow?: string | null;
+  menuAccessTitle?: string | null;
+  /**
+   * Small line at the bottom of the menu.
+   */
+  menuNote?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer".
+ */
+export interface Footer {
+  id: number;
+  tagline?: string | null;
+  /**
+   * Shown large at the top of the footer. Each sentence starts a new line.
+   */
+  centerText?: string | null;
+  showButtons?: boolean | null;
+  /**
+   * A live clock (India Standard Time) next to the logo.
+   */
+  localTime?: {
+    show?: boolean | null;
+    label?: string | null;
+    suffix?: string | null;
+  };
+  fund?: {
+    heading?: string | null;
+    subheading?: string | null;
+    items?:
+      | {
+          label: string;
+          value: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  navigate?: {
+    heading?: string | null;
+    links?:
+      | {
+          label: string;
+          /**
+           * https://…, /page or #section-id
+           */
+          href: string;
+          newTab?: boolean | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  access?: {
+    heading?: string | null;
+    links?:
+      | {
+          label: string;
+          /**
+           * https://…, /page or #section-id
+           */
+          href: string;
+          newTab?: boolean | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  address?: {
+    heading?: string | null;
+    lines?: string | null;
+    mapLabel?: string | null;
+    mapUrl?: string | null;
+    linkedinLabel?: string | null;
+  };
+  copyright?: string | null;
+  legalLinks?:
+    | {
+        label: string;
+        /**
+         * https://…, /page or #section-id
+         */
+        href: string;
+        newTab?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Regulatory disclaimer shown in small print (review with legal counsel).
+   */
+  disclaimer?: string | null;
+  showWordmark?: boolean | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * All text, options and rules for the multi-step “Pitch To Us” application.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pitch-form".
+ */
+export interface PitchForm {
+  id: number;
+  founder: {
+    enabled?: boolean | null;
+    title: string;
+    question?: string | null;
+    yes?: string | null;
+    no?: string | null;
+    noMessage?: string | null;
+    noLink?: {
+      label?: string | null;
+      /**
+       * https://…, /page or #section-id
+       */
+      href?: string | null;
+      newTab?: boolean | null;
+    };
+  };
+  thesis: {
+    enabled?: boolean | null;
+    title: string;
+    question?: string | null;
+    yes?: string | null;
+    no?: string | null;
+    noMessage?: string | null;
+    links?:
+      | {
+          label: string;
+          /**
+           * https://…, /page or #section-id
+           */
+          href: string;
+          newTab?: boolean | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  dpiit: {
+    title: string;
+    question?: string | null;
+    yes?: string | null;
+    no?: string | null;
+    applied?: string | null;
+    planned?: string | null;
+    noMessage?: string | null;
+  };
+  startup: {
+    title: string;
+    startupName: {
+      label: string;
+      placeholder?: string | null;
+      required?: boolean | null;
+      help?: string | null;
+    };
+    website: {
+      label: string;
+      placeholder?: string | null;
+      required?: boolean | null;
+      help?: string | null;
+    };
+    founderNames: {
+      label: string;
+      placeholder?: string | null;
+      required?: boolean | null;
+      help?: string | null;
+    };
+    email: {
+      label: string;
+      placeholder?: string | null;
+      required?: boolean | null;
+      help?: string | null;
+    };
+    phone: {
+      label: string;
+      placeholder?: string | null;
+      required?: boolean | null;
+      help?: string | null;
+    };
+  };
+  focus: {
+    title: string;
+    sector: {
+      label: string;
+      required?: boolean | null;
+      options?:
+        | {
+            value: string;
+            id?: string | null;
+          }[]
+        | null;
+    };
+    stage: {
+      label: string;
+      required?: boolean | null;
+      options?:
+        | {
+            value: string;
+            id?: string | null;
+          }[]
+        | null;
+    };
+  };
+  story: {
+    title: string;
+    vision: {
+      label: string;
+      placeholder?: string | null;
+      required?: boolean | null;
+      help?: string | null;
+    };
+    superiority: {
+      label: string;
+      placeholder?: string | null;
+      required?: boolean | null;
+      help?: string | null;
+    };
+  };
+  proof: {
+    title: string;
+    traction: {
+      label: string;
+      placeholder?: string | null;
+      required?: boolean | null;
+      help?: string | null;
+    };
+    willingnessToPay: {
+      label: string;
+      placeholder?: string | null;
+      required?: boolean | null;
+      help?: string | null;
+    };
+  };
+  market: {
+    title: string;
+    market: {
+      label: string;
+      placeholder?: string | null;
+      required?: boolean | null;
+      help?: string | null;
+    };
+    defensibility: {
+      label: string;
+      placeholder?: string | null;
+      required?: boolean | null;
+      help?: string | null;
+    };
+  };
+  plan: {
+    title: string;
+    buildPlan: {
+      label: string;
+      placeholder?: string | null;
+      required?: boolean | null;
+      help?: string | null;
+    };
+  };
+  deck: {
+    title: string;
+    label?: string | null;
+    help?: string | null;
+    maxSizeMB?: number | null;
+    required?: boolean | null;
+    browseLabel?: string | null;
+    dropLabel?: string | null;
+    replaceLabel?: string | null;
+    formatsNote?: string | null;
+    consentHeading?: string | null;
+    consentLabel?: string | null;
+  };
+  stepLabel?: string | null;
+  backLabel?: string | null;
+  continueLabel?: string | null;
+  submitLabel?: string | null;
+  submittingLabel?: string | null;
+  optionalLabel?: string | null;
+  requiredNote?: string | null;
+  successTitle?: string | null;
+  successBody?: string | null;
+  restartLabel?: string | null;
+  errorRequired?: string | null;
+  errorChoice?: string | null;
+  errorEmail?: string | null;
+  errorUrl?: string | null;
+  errorFileMissing?: string | null;
+  errorFileSize?: string | null;
+  errorFileType?: string | null;
+  errorConsent?: string | null;
+  errorGeneric?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * The tabbed forms in “Reach Us”. Add, remove or reorder fields freely — submissions appear under Submissions → Enquiries.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enquiry-forms".
+ */
+export interface EnquiryForm {
+  id: number;
+  tabsLabel?: string | null;
+  forms?:
+    | {
+        /**
+         * Short ID, e.g. investor — use #reach-us?form=investor to open it directly.
+         */
+        key: string;
+        tabLabel: string;
+        intro?: string | null;
+        fields?:
+          | {
+              /**
+               * Use “name” and “email” for the sender’s name/e-mail.
+               */
+              name: string;
+              label: string;
+              type: 'text' | 'email' | 'tel' | 'url' | 'textarea' | 'select';
+              placeholder?: string | null;
+              width?: ('full' | 'half') | null;
+              required?: boolean | null;
+              options?:
+                | {
+                    value: string;
+                    id?: string | null;
+                  }[]
+                | null;
+              id?: string | null;
+            }[]
+          | null;
+        consentLabel?: string | null;
+        submitLabel?: string | null;
+        successMessage?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  sendingLabel?: string | null;
+  optionalLabel?: string | null;
+  selectPlaceholder?: string | null;
+  errorRequired?: string | null;
+  errorEmail?: string | null;
+  errorUrl?: string | null;
+  errorConsent?: string | null;
+  errorGeneric?: string | null;
+  anotherLabel?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  siteName?: T;
+  metaTitle?: T;
+  metaDescription?: T;
+  ogImage?: T;
+  investorLoginUrl?: T;
+  investWithUsUrl?: T;
+  linkedinUrl?: T;
+  skipToContent?: T;
+  menuLabel?: T;
+  closeLabel?: T;
+  motionOnLabel?: T;
+  motionOffLabel?: T;
+  backToTop?: T;
+  opensNewTab?: T;
+  viewLabel?: T;
+  homeLabel?: T;
+  notFoundTitle?: T;
+  notFoundBody?: T;
+  notFoundCta?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "header_select".
+ */
+export interface HeaderSelect<T extends boolean = true> {
+  buttons?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+        newTab?: T;
+        showOnMobile?: T;
+        id?: T;
+      };
+  navItems?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+        newTab?: T;
+        id?: T;
+      };
+  menuEyebrow?: T;
+  menuAccessTitle?: T;
+  menuNote?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer_select".
+ */
+export interface FooterSelect<T extends boolean = true> {
+  tagline?: T;
+  centerText?: T;
+  showButtons?: T;
+  localTime?:
+    | T
+    | {
+        show?: T;
+        label?: T;
+        suffix?: T;
+      };
+  fund?:
+    | T
+    | {
+        heading?: T;
+        subheading?: T;
+        items?:
+          | T
+          | {
+              label?: T;
+              value?: T;
+              id?: T;
+            };
+      };
+  navigate?:
+    | T
+    | {
+        heading?: T;
+        links?:
+          | T
+          | {
+              label?: T;
+              href?: T;
+              newTab?: T;
+              id?: T;
+            };
+      };
+  access?:
+    | T
+    | {
+        heading?: T;
+        links?:
+          | T
+          | {
+              label?: T;
+              href?: T;
+              newTab?: T;
+              id?: T;
+            };
+      };
+  address?:
+    | T
+    | {
+        heading?: T;
+        lines?: T;
+        mapLabel?: T;
+        mapUrl?: T;
+        linkedinLabel?: T;
+      };
+  copyright?: T;
+  legalLinks?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+        newTab?: T;
+        id?: T;
+      };
+  disclaimer?: T;
+  showWordmark?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pitch-form_select".
+ */
+export interface PitchFormSelect<T extends boolean = true> {
+  founder?:
+    | T
+    | {
+        enabled?: T;
+        title?: T;
+        question?: T;
+        yes?: T;
+        no?: T;
+        noMessage?: T;
+        noLink?:
+          | T
+          | {
+              label?: T;
+              href?: T;
+              newTab?: T;
+            };
+      };
+  thesis?:
+    | T
+    | {
+        enabled?: T;
+        title?: T;
+        question?: T;
+        yes?: T;
+        no?: T;
+        noMessage?: T;
+        links?:
+          | T
+          | {
+              label?: T;
+              href?: T;
+              newTab?: T;
+              id?: T;
+            };
+      };
+  dpiit?:
+    | T
+    | {
+        title?: T;
+        question?: T;
+        yes?: T;
+        no?: T;
+        applied?: T;
+        planned?: T;
+        noMessage?: T;
+      };
+  startup?:
+    | T
+    | {
+        title?: T;
+        startupName?:
+          | T
+          | {
+              label?: T;
+              placeholder?: T;
+              required?: T;
+              help?: T;
+            };
+        website?:
+          | T
+          | {
+              label?: T;
+              placeholder?: T;
+              required?: T;
+              help?: T;
+            };
+        founderNames?:
+          | T
+          | {
+              label?: T;
+              placeholder?: T;
+              required?: T;
+              help?: T;
+            };
+        email?:
+          | T
+          | {
+              label?: T;
+              placeholder?: T;
+              required?: T;
+              help?: T;
+            };
+        phone?:
+          | T
+          | {
+              label?: T;
+              placeholder?: T;
+              required?: T;
+              help?: T;
+            };
+      };
+  focus?:
+    | T
+    | {
+        title?: T;
+        sector?:
+          | T
+          | {
+              label?: T;
+              required?: T;
+              options?:
+                | T
+                | {
+                    value?: T;
+                    id?: T;
+                  };
+            };
+        stage?:
+          | T
+          | {
+              label?: T;
+              required?: T;
+              options?:
+                | T
+                | {
+                    value?: T;
+                    id?: T;
+                  };
+            };
+      };
+  story?:
+    | T
+    | {
+        title?: T;
+        vision?:
+          | T
+          | {
+              label?: T;
+              placeholder?: T;
+              required?: T;
+              help?: T;
+            };
+        superiority?:
+          | T
+          | {
+              label?: T;
+              placeholder?: T;
+              required?: T;
+              help?: T;
+            };
+      };
+  proof?:
+    | T
+    | {
+        title?: T;
+        traction?:
+          | T
+          | {
+              label?: T;
+              placeholder?: T;
+              required?: T;
+              help?: T;
+            };
+        willingnessToPay?:
+          | T
+          | {
+              label?: T;
+              placeholder?: T;
+              required?: T;
+              help?: T;
+            };
+      };
+  market?:
+    | T
+    | {
+        title?: T;
+        market?:
+          | T
+          | {
+              label?: T;
+              placeholder?: T;
+              required?: T;
+              help?: T;
+            };
+        defensibility?:
+          | T
+          | {
+              label?: T;
+              placeholder?: T;
+              required?: T;
+              help?: T;
+            };
+      };
+  plan?:
+    | T
+    | {
+        title?: T;
+        buildPlan?:
+          | T
+          | {
+              label?: T;
+              placeholder?: T;
+              required?: T;
+              help?: T;
+            };
+      };
+  deck?:
+    | T
+    | {
+        title?: T;
+        label?: T;
+        help?: T;
+        maxSizeMB?: T;
+        required?: T;
+        browseLabel?: T;
+        dropLabel?: T;
+        replaceLabel?: T;
+        formatsNote?: T;
+        consentHeading?: T;
+        consentLabel?: T;
+      };
+  stepLabel?: T;
+  backLabel?: T;
+  continueLabel?: T;
+  submitLabel?: T;
+  submittingLabel?: T;
+  optionalLabel?: T;
+  requiredNote?: T;
+  successTitle?: T;
+  successBody?: T;
+  restartLabel?: T;
+  errorRequired?: T;
+  errorChoice?: T;
+  errorEmail?: T;
+  errorUrl?: T;
+  errorFileMissing?: T;
+  errorFileSize?: T;
+  errorFileType?: T;
+  errorConsent?: T;
+  errorGeneric?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enquiry-forms_select".
+ */
+export interface EnquiryFormsSelect<T extends boolean = true> {
+  tabsLabel?: T;
+  forms?:
+    | T
+    | {
+        key?: T;
+        tabLabel?: T;
+        intro?: T;
+        fields?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              type?: T;
+              placeholder?: T;
+              width?: T;
+              required?: T;
+              options?:
+                | T
+                | {
+                    value?: T;
+                    id?: T;
+                  };
+              id?: T;
+            };
+        consentLabel?: T;
+        submitLabel?: T;
+        successMessage?: T;
+        id?: T;
+      };
+  sendingLabel?: T;
+  optionalLabel?: T;
+  selectPlaceholder?: T;
+  errorRequired?: T;
+  errorEmail?: T;
+  errorUrl?: T;
+  errorConsent?: T;
+  errorGeneric?: T;
+  anotherLabel?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "collections_widget".
  */
 export interface CollectionsWidget {
@@ -324,6 +2902,26 @@ export interface CollectionsWidget {
     [k: string]: unknown;
   };
   width: 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskSchedulePublish".
+ */
+export interface TaskSchedulePublish {
+  input: {
+    type?: ('publish' | 'unpublish') | null;
+    locale?: string | null;
+    doc?: {
+      relationTo: 'pages';
+      value: number | Page;
+    } | null;
+    global?: string | null;
+    user?: {
+      relationTo: 'users';
+      value: number | User;
+    } | null;
+  };
+  output?: unknown;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

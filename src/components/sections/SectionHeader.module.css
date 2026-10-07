@@ -1,0 +1,42 @@
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  align-items: end;
+  gap: 2rem clamp(2rem, 5vw, 6rem);
+  margin-bottom: clamp(2.25rem, 4.5vw, 4rem);
+}
+.stack {
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+.titleCol {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+.title {
+  max-width: 16ch;
+}
+.side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding-bottom: 0.4rem;
+}
+.tagline {
+  max-width: 34ch;
+  font-weight: 400;
+}
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+@media (max-width: 900px) {
+  .header {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+}

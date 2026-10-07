@@ -1,0 +1,113 @@
+.pitch {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(60% 50% at 10% 100%, rgba(255, 255, 255, 0.06), transparent 70%),
+    radial-gradient(70% 60% at 100% 0%, #1c1c1c, transparent 70%);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(2.5rem, 6vw, 7rem);
+  align-items: stretch;
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  min-height: 100%;
+}
+.tagline {
+  max-width: 18ch;
+  font-size: var(--fs-h3);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  max-width: 46ch;
+}
+.lead {
+  font-size: var(--fs-lead);
+  line-height: 1.5;
+}
+.note {
+  font-size: var(--fs-small);
+  line-height: 1.65;
+  color: var(--fg-muted);
+}
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+}
+.title {
+  margin-top: auto;
+  padding-top: clamp(1.5rem, 4vw, 4rem);
+  font-size: clamp(2.75rem, 5.6vw, 6.5rem);
+  font-weight: 500;
+  line-height: 0.92;
+  letter-spacing: -0.06em;
+}
+
+.formCard {
+  align-self: start;
+  padding: clamp(1.5rem, 3vw, 2.75rem);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--border);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+@media (max-width: 1000px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  /* Eyebrow, then the big title, then the copy */
+  .intro > * {
+    order: 2;
+  }
+  .intro > :first-child {
+    order: 0;
+  }
+  .intro > .title {
+    order: 1;
+    margin-top: 0;
+    padding-top: 0;
+  }
+  .intro {
+    min-height: 0;
+  }
+}
+
+/* Cursor spotlight */
+.spotlight {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    520px circle at var(--mx, 75%) var(--my, 35%),
+    rgba(255, 255, 255, 0.09),
+    rgba(255, 255, 255, 0) 65%
+  );
+}
+.titleVisual {
+  display: block;
+}
+.char {
+  display: inline-block;
+  will-change: transform;
+}

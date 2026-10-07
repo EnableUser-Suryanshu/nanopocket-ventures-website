@@ -1,0 +1,514 @@
+/* ==========================================================================
+   Hero → Statement scene
+   Default (no JS / reduced motion / mobile): stacked, static layout.
+   Desktop + motion: a 270vh scroll scene with a sticky 100vh stage.
+   ========================================================================== */
+
+.scene {
+  /* Prokit-scale headline: three equal lines, staggered by the photo */
+  --fs-hero-xl: clamp(2.6rem, 6.6vw + 0.1rem, 8.5rem);
+  position: relative;
+  background: var(--white);
+}
+.sticky {
+  position: relative;
+}
+
+/* ---------- Hero copy ---------- */
+.hero {
+  position: relative;
+  z-index: 2;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: calc(var(--header-h) + clamp(1.5rem, 4vh, 3rem));
+  padding-bottom: 5.5rem;
+  pointer-events: none;
+}
+.hero a,
+.hero button {
+  pointer-events: auto;
+}
+.heroInner {
+  position: relative;
+}
+.title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.05em;
+}
+.lines {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.lineOne {
+  display: block;
+  font-size: var(--fs-hero-xl);
+  font-weight: 400;
+  line-height: 0.94;
+}
+.row {
+  display: flex;
+  align-items: center;
+  font-size: var(--fs-hero-xl);
+  line-height: 0.94;
+}
+
+/* Photo in the headline — a reel of renders that wipes upwards to the next one */
+.pill {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 15vw;
+  height: 0.8em;
+  margin: 0.06em 0.2em 0 0;
+  border-radius: 0.06em;
+  overflow: hidden;
+  background: #ececec;
+  isolation: isolate;
+}
+.pill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(5, 5, 5, 0.1);
+  pointer-events: none;
+}
+.pill img,
+.pill :global(svg) {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.slide {
+  position: absolute;
+  inset: 0;
+  display: block;
+  transition:
+    clip-path 0.9s var(--ease-in-out),
+    transform 1.4s var(--ease-out);
+}
+.slide[data-state='in'] {
+  clip-path: inset(100% 0 0 0);
+  transform: scale(1.3);
+}
+.slide[data-state='on'] {
+  z-index: 2;
+  clip-path: inset(0 0 0 0);
+  transform: scale(1);
+}
+.slide[data-state='out'] {
+  z-index: 1;
+  clip-path: inset(0 0 100% 0);
+}
+/* Collapsed / undrawn until the intro plays (see HeroStatement intro) */
+:global(html.motion:not(.no-js)) .pill {
+  width: 0;
+  margin-right: 0;
+}
+:global(html.motion:not(.no-js)) .swoosh {
+  clip-path: inset(0 100% 0 0);
+}
+.highlight {
+  position: relative;
+  display: block;
+  overflow: clip;
+  overflow-clip-margin: 0.1em;
+  font-weight: 400;
+  padding: 0 0.06em 0.18em 0;
+  margin-bottom: -0.18em;
+}
+.highlight > span {
+  display: block;
+}
+.lastRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 0 0.6em;
+  font-size: var(--fs-hero-xl);
+}
+.lineTwoWrap {
+  position: relative;
+  display: inline-block;
+  flex: none;
+  padding-bottom: 0.2em;
+}
+.lineTwo {
+  display: block;
+  font-weight: 400;
+  line-height: 0.94;
+}
+/* Small caption beside the last line (Prokit: “Create — We start with ideas that make sense.”) */
+.heroCaption {
+  display: block;
+  max-width: 20ch;
+  /* sit on the baseline of the big line (its descent + the underline's room below it) */
+  margin-bottom: calc(var(--fs-hero-xl) * 0.3 - 0.3em);
+  font-size: clamp(1rem, 0.55vw + 0.7rem, 1.45rem);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+}
+.swoosh {
+  position: absolute;
+  left: -1.5%;
+  bottom: 0.02em;
+  width: 104%;
+  height: 0.22em;
+  fill: var(--red);
+  overflow: visible;
+}
+.meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-top: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+.subline {
+  max-width: 30ch;
+  font-size: clamp(1rem, 0.35vw + 0.85rem, 1.2rem);
+  line-height: 1.4;
+  color: var(--fg);
+}
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.ctaItem {
+  display: inline-flex;
+}
+
+/* ---------- Bottom row ---------- */
+.bottom {
+  position: absolute;
+  z-index: 4;
+  left: 0;
+  right: 0;
+  top: calc(100svh - 4.25rem);
+  display: flex;
+  align-items: center;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+.scroll {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.scrollRoll {
+  position: relative;
+  display: inline-block;
+  height: 1.3em;
+  overflow: hidden;
+  line-height: 1.3em;
+}
+.scrollRoll > span {
+  display: block;
+}
+:global(html.motion) .scrollRoll > span {
+  animation: roll 2.4s var(--ease-in-out) infinite;
+}
+@keyframes roll {
+  0%,
+  35% {
+    transform: translateY(0);
+  }
+  65%,
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+/* ---------- Moving wall ---------- */
+.wallWrap {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100svh;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 24%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 24%);
+}
+.wall {
+  position: absolute;
+  top: -35%;
+  bottom: -35%;
+  left: 6%;
+  right: -40%;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+  transform: rotate(16deg);
+  transform-origin: 50% 50%;
+}
+.column {
+  position: relative;
+  min-width: 0;
+}
+.track {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  will-change: transform;
+}
+:global(html.motion) .up .track {
+  animation: wall-up 64s linear infinite;
+}
+:global(html.motion) .down .track {
+  animation: wall-down 72s linear infinite;
+}
+.column:nth-child(3) .track {
+  animation-duration: 80s !important;
+}
+@keyframes wall-up {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(calc(-100% / 3));
+  }
+}
+@keyframes wall-down {
+  from {
+    transform: translateY(calc(-100% / 3));
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* ---------- Statement card ---------- */
+.card {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  padding-block: var(--section-y);
+  background: var(--white);
+  color: var(--black);
+}
+.cardText {
+  text-align: center;
+}
+.statement {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: var(--fs-statement);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: var(--tracking-display);
+}
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0 0.28em;
+}
+.caption {
+  display: inline-block;
+  max-width: 11ch;
+  margin-inline: 0.3em;
+  font-family: var(--font-ui);
+  font-size: clamp(0.7rem, 0.3vw + 0.55rem, 0.85rem);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+  text-align: left;
+  text-transform: uppercase;
+}
+.arrow {
+  display: inline-grid;
+  place-items: center;
+  width: 1.45em;
+  height: 0.8em;
+  margin-inline: 0.15em;
+  border-radius: 999px;
+  border: 1.5px solid var(--black);
+}
+.arrow svg {
+  width: 0.42em;
+  height: 0.42em;
+}
+:global(html.motion) .arrow svg {
+  animation: nudge 1.8s var(--ease-in-out) infinite;
+}
+@keyframes nudge {
+  0%,
+  100% {
+    transform: translateX(-0.12em);
+  }
+  50% {
+    transform: translateX(0.14em);
+  }
+}
+.mark {
+  display: inline-block;
+  height: 0.8em;
+  margin-inline: 0.15em;
+}
+.mark svg {
+  height: 100%;
+  width: auto;
+}
+.inlineButton {
+  display: inline-flex;
+  margin-inline: 0.25em;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+/* ==========================================================================
+   Desktop + motion: the pinned scene
+   ========================================================================== */
+@media (min-width: 1024px) {
+  :global(html.motion:not(.no-js)) .scene {
+    height: 270vh;
+  }
+  :global(html.motion:not(.no-js)) .sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    overflow: hidden;
+  }
+  :global(html.motion:not(.no-js)) .hero {
+    position: absolute;
+    inset: 0;
+    min-height: 0;
+  }
+  :global(html.motion:not(.no-js)) .wallWrap {
+    --fade: 1;
+    inset: 0;
+    width: auto;
+    height: auto;
+    /* angled so the photos stay clear of the text block’s stepped right edge */
+    -webkit-mask-image: linear-gradient(
+      72deg,
+      transparent calc(var(--fade) * 64%),
+      #000 calc(var(--fade) * 80%)
+    );
+    mask-image: linear-gradient(
+      72deg,
+      transparent calc(var(--fade) * 64%),
+      #000 calc(var(--fade) * 80%)
+    );
+  }
+  :global(html.motion:not(.no-js)) .wall {
+    top: -30%;
+    bottom: -30%;
+    left: -8%;
+    right: -8%;
+    /* same order GSAP writes: translate → rotate → scale */
+    transform: translate(30%, 0) rotate(24deg) scale(1.35);
+  }
+  :global(html.motion:not(.no-js)) .card {
+    position: absolute;
+    inset: 0;
+    padding: 0;
+    transform: translateX(100%);
+    will-change: transform, clip-path;
+  }
+}
+
+/* ==========================================================================
+   Tablet / mobile: hero copy, then a band of the wall, then the statement
+   ========================================================================== */
+@media (max-width: 1023px) {
+  .hero {
+    min-height: auto;
+    justify-content: flex-start;
+    padding-top: calc(var(--header-h) + 2rem);
+    padding-bottom: 1.5rem;
+  }
+  .title {
+    max-width: none;
+  }
+  .bottom {
+    position: relative;
+    top: auto;
+    margin-top: 0.5rem;
+  }
+  .wallWrap {
+    position: relative;
+    width: 100%;
+    height: 82vw;
+    max-height: 560px;
+    margin-top: 2rem;
+    -webkit-mask-image: linear-gradient(
+      180deg,
+      transparent 0%,
+      #000 16%,
+      #000 84%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(180deg, transparent 0%, #000 16%, #000 84%, transparent 100%);
+  }
+  .wall {
+    top: -40%;
+    bottom: -40%;
+    left: -14%;
+    right: -14%;
+    gap: 12px;
+  }
+  .track {
+    gap: 12px;
+  }
+  .statement {
+    font-size: clamp(1.9rem, 7.6vw, 3.2rem);
+  }
+  .card .caption,
+  .arrow,
+  .mark {
+    display: none;
+  }
+  .inlineButton {
+    flex-basis: 100%;
+    justify-content: center;
+    order: 3;
+    margin: 0.4em 0;
+    font-size: 1rem;
+  }
+  .sticky {
+    display: flex;
+    flex-direction: column;
+  }
+  .hero {
+    order: 1;
+  }
+  .bottom {
+    order: 2;
+  }
+  .wallWrap {
+    order: 3;
+  }
+  .card {
+    order: 4;
+  }
+}
+
+/* Phones: the caption drops under the last line */
+@media (max-width: 700px) {
+  .lastRow {
+    display: block;
+  }
+  .heroCaption {
+    max-width: 30ch;
+    margin: 1.1rem 0 0;
+  }
+}

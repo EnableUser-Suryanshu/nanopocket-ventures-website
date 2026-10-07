@@ -1,0 +1,177 @@
+.manifesto {
+  --fg: #fff;
+  --fg-muted: var(--muted-dark);
+  --border: var(--line-dark);
+  position: relative;
+  z-index: 2;
+  background: var(--black) !important;
+  color: #fff !important;
+}
+.sticky {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding-block: calc(var(--header-h) + 2rem) var(--section-y);
+}
+
+/* 3D mark glowing behind the text */
+.visual {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+.visualInner {
+  width: min(44vw, 560px);
+  aspect-ratio: 4 / 5;
+  -webkit-mask-image: radial-gradient(closest-side, #000 62%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 62%, transparent 100%);
+}
+.visualInner img,
+.visualInner svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Copy */
+.content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+.eyebrow {
+  color: #fff;
+}
+.title {
+  font-size: var(--fs-display);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+.caption {
+  max-width: 22ch;
+  font-family: var(--font-ui);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1.6;
+  text-transform: uppercase;
+  color: var(--muted-dark);
+}
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.paragraph {
+  font-size: var(--fs-lead);
+  line-height: 1.55;
+  color: #fff;
+}
+.first {
+  font-size: clamp(1.3rem, 1.25vw + 0.75rem, 2.05rem);
+  line-height: 1.32;
+  letter-spacing: -0.02em;
+}
+.fillText {
+  display: block;
+}
+.word {
+  display: inline-block;
+  will-change: opacity;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2rem;
+  margin-top: 0.5rem;
+}
+.fact {
+  padding: 1rem 0;
+  border-top: 1px solid var(--line-dark);
+}
+.fact dt {
+  font-family: var(--font-ui);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-dark);
+  margin-bottom: 0.35rem;
+}
+.fact dd {
+  font-size: 0.975rem;
+  font-weight: 500;
+  color: #fff;
+}
+
+/* The pocket mask is only used for the pinned desktop scene */
+.mask {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  :global(html.motion:not(.no-js)) .manifesto {
+    height: 250vh;
+  }
+  :global(html.motion:not(.no-js)) .sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    min-height: 0;
+    padding-block: calc(var(--header-h) + 1rem) 2rem;
+  }
+  :global(html.motion:not(.no-js)) .mask {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+}
+
+/* Static desktop (reduced motion / no JS): park the mark where the scroll scene ends — dimmed, behind the title */
+@media (min-width: 900px) {
+  :global(html:not(.motion)) .visual,
+  :global(html.no-js) .visual {
+    opacity: 0.32;
+    transform: translateX(-26%) scale(0.8);
+  }
+}
+
+@media (max-width: 899px) {
+  .content {
+    grid-template-columns: 1fr;
+  }
+  .visual {
+    position: relative;
+    inset: auto;
+    margin-bottom: -20vw;
+  }
+  .visualInner {
+    width: 70vw;
+  }
+  .sticky {
+    flex-direction: column;
+  }
+}
+@media (max-width: 560px) {
+  .facts {
+    grid-template-columns: 1fr;
+  }
+}

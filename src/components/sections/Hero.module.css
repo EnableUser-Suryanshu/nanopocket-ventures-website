@@ -1,0 +1,295 @@
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: calc(var(--header-h) + clamp(1.5rem, 4vh, 3rem));
+  padding-bottom: clamp(1rem, 2.5vh, 1.75rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+/* ---------- Title (prokit stacked lines) ---------- */
+.title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: var(--tracking-display);
+  max-width: min(60vw, 900px);
+}
+.lines {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.lineOne {
+  display: block;
+  font-size: calc(var(--fs-hero) * 0.56);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.2em;
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.2em;
+  font-size: var(--fs-hero);
+  line-height: 1;
+}
+.pill {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 1.6em;
+  height: 0.74em;
+  margin-top: 0.06em;
+  border-radius: 999px;
+  overflow: hidden;
+  transform-origin: 0% 50%;
+  background: #0b0b0b;
+  box-shadow: inset 0 0 0 1px rgba(5, 5, 5, 0.14);
+}
+.pill :global(svg),
+.pill img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.highlight {
+  display: block;
+  overflow: clip;
+  overflow-clip-margin: 0.1em;
+  font-weight: 600;
+  padding: 0 0.06em 0.18em 0;
+  margin-bottom: -0.18em;
+}
+.highlight > span {
+  display: block;
+}
+.lineTwoWrap {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.2em;
+  font-size: var(--fs-hero);
+}
+.lineTwo {
+  display: block;
+  font-weight: 600;
+  line-height: 1.02;
+}
+.swoosh {
+  position: absolute;
+  left: -1.5%;
+  bottom: 0.02em;
+  width: 104%;
+  height: 0.22em;
+  fill: var(--red);
+  overflow: visible;
+}
+
+/* ---------- Supporting line + buttons ---------- */
+.meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-top: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+.subline {
+  max-width: 34ch;
+  font-size: var(--fs-lead);
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.ctaItem {
+  display: inline-flex;
+}
+
+/* ---------- Tilted moving columns (prokit showcase) ---------- */
+.showcaseWrap {
+  position: absolute;
+  inset: 0 0 0 auto;
+  z-index: 0;
+  width: 50%;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 22%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 22%);
+}
+.showcase {
+  position: absolute;
+  top: -35%;
+  bottom: -35%;
+  left: 8%;
+  right: -22%;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  transform: rotate(16deg);
+  transform-origin: 50% 50%;
+}
+.column {
+  position: relative;
+  min-width: 0;
+}
+.track {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  will-change: transform;
+}
+:global(html.motion) .up .track {
+  animation: hero-up 58s linear infinite;
+}
+:global(html.motion) .down .track {
+  animation: hero-down 66s linear infinite;
+}
+.column:nth-child(3) .track {
+  animation-duration: 74s !important;
+}
+@keyframes hero-up {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(calc(-100% / 3));
+  }
+}
+@keyframes hero-down {
+  from {
+    transform: translateY(calc(-100% / 3));
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Optional globe instead of the showcase */
+.globeWrap {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  right: -6vw;
+  width: min(48vw, 760px);
+  transform: translateY(-46%);
+}
+
+/* ---------- Bottom row ---------- */
+.bottom {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  margin-top: clamp(2rem, 6vh, 4rem);
+}
+.scroll {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.scrollRoll {
+  position: relative;
+  display: inline-block;
+  height: 1.3em;
+  overflow: hidden;
+  line-height: 1.3em;
+}
+.scrollRoll > span {
+  display: block;
+}
+:global(html.motion) .scrollRoll > span {
+  animation: roll 2.4s var(--ease-in-out) infinite;
+}
+@keyframes roll {
+  0%,
+  35% {
+    transform: translateY(0);
+  }
+  65%,
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+@media (max-width: 1100px) {
+  .showcaseWrap {
+    width: 46%;
+  }
+  .title {
+    max-width: 62vw;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero {
+    min-height: auto;
+    justify-content: flex-start;
+    padding-top: calc(var(--header-h) + 2rem);
+  }
+  .title {
+    max-width: none;
+  }
+  .showcaseWrap {
+    position: relative;
+    inset: auto;
+    order: 2;
+    width: 100%;
+    height: 82vw;
+    max-height: 520px;
+    margin-top: 2.5rem;
+    -webkit-mask-image: linear-gradient(
+      180deg,
+      transparent 0%,
+      #000 18%,
+      #000 82%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+  }
+  .showcase {
+    top: -40%;
+    bottom: -40%;
+    left: -12%;
+    right: -12%;
+    gap: 12px;
+  }
+  .track {
+    gap: 12px;
+  }
+  .inner {
+    order: 1;
+  }
+  .bottom {
+    order: 3;
+    margin-top: 1.5rem;
+  }
+  .globeWrap {
+    position: relative;
+    top: auto;
+    right: auto;
+    order: 2;
+    width: 100%;
+    transform: none;
+    margin-top: 2rem;
+  }
+}

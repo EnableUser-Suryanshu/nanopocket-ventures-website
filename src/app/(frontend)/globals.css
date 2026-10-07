@@ -1,0 +1,701 @@
+/* ==========================================================================
+   NanoPocket Ventures — design system
+   Black & white lead. Red and gold signal. (Brand guidelines v1.0)
+   Type sizes use clamp(rem, vw, rem) so text still scales with browser zoom (WCAG 1.4.4).
+   ========================================================================== */
+
+:root {
+  /* Brand colours */
+  --black: #050505;
+  --ink: #0b0b0b;
+  --graphite: #1a1a1a;
+  --white: #ffffff;
+  --smoke: #f5f5f5; /* neutral light surface — no beige */
+  --smoke-2: #ececec;
+  --line: #e3e3e3;
+  --line-dark: rgba(255, 255, 255, 0.16);
+  --muted: #5d5d5d; /* 6.4:1 on white */
+  --muted-dark: #a6a6a6; /* 8:1 on black */
+  --red: #e50914; /* signal accent — never used for text */
+  --gold: #d99a00; /* seed accent on dark */
+  --gold-ink: #9a6a00; /* gold that passes AA on white */
+  --gold-gradient: linear-gradient(
+    100deg,
+    #8a5e00 0%,
+    #b58300 28%,
+    #9a6a00 52%,
+    #b58300 76%,
+    #8a5e00 100%
+  );
+
+  /* Theme (overridden by .theme-dark / .theme-light) */
+  --bg: var(--white);
+  --fg: var(--black);
+  --fg-muted: var(--muted);
+  --border: var(--line);
+  --surface: var(--smoke);
+
+  /* Type */
+  --font-display: var(--font-poppins), 'Inter', 'Lato', system-ui, sans-serif;
+  --font-ui: var(--font-montserrat), 'Inter', 'Lato', system-ui, sans-serif;
+
+  /* Calm, designer scale — large where it matters, never shouting */
+  --fs-hero-sm: clamp(1.5rem, 2.6vw + 0.4rem, 3.25rem);
+  --fs-hero: clamp(2.6rem, 5vw + 0.3rem, 5.75rem);
+  --fs-display: clamp(2.1rem, 3.3vw + 0.6rem, 4.25rem);
+  --fs-statement: clamp(1.75rem, 2.7vw + 0.5rem, 3.5rem);
+  --fs-h2: clamp(2rem, 3vw + 0.6rem, 3.75rem);
+  --fs-h3: clamp(1.45rem, 1.5vw + 0.8rem, 2.25rem);
+  --fs-h4: clamp(1.15rem, 0.7vw + 0.8rem, 1.5rem);
+  --fs-lead: clamp(1.05rem, 0.4vw + 0.85rem, 1.25rem);
+  --fs-body: 1rem;
+  --fs-small: 0.9375rem;
+  --fs-label: 0.75rem;
+
+  --tracking-display: -0.045em;
+  --tracking-tight: -0.03em;
+
+  /* Layout */
+  --gutter: clamp(1.25rem, 3vw, 3rem);
+  --section-y: clamp(4.5rem, 7.5vw, 8rem);
+  --radius: 18px;
+  --radius-lg: 26px;
+  --header-h: 76px;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+@media (max-width: 900px) {
+  :root {
+    --header-h: 68px;
+    --radius: 18px;
+    --radius-lg: 24px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Reset
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-h) + 12px);
+}
+
+html.reduce-motion {
+  scroll-behavior: auto;
+}
+
+body {
+  margin: 0;
+  background: var(--white);
+  color: var(--black);
+  font-family: var(--font-display);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+p,
+ul,
+ol,
+dl,
+dd,
+figure,
+blockquote {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+::selection {
+  background: var(--black);
+  color: var(--white);
+}
+.theme-dark ::selection {
+  background: var(--white);
+  color: var(--black);
+}
+
+/* --------------------------------------------------------------------------
+   Accessibility primitives
+   -------------------------------------------------------------------------- */
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+:focus {
+  outline: none;
+}
+:focus-visible {
+  outline: 3px solid var(--black);
+  outline-offset: 3px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 6px var(--white);
+}
+.theme-dark :focus-visible {
+  outline-color: var(--white);
+  box-shadow: 0 0 0 6px var(--black);
+}
+
+[tabindex='-1']:focus,
+[tabindex='-1']:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 1000;
+  padding: 0.85rem 1.25rem;
+  background: var(--black);
+  color: var(--white);
+  border-radius: 999px;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: var(--fs-small);
+  transform: translateY(-160%);
+  transition: transform 0.25s var(--ease-out);
+}
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* --------------------------------------------------------------------------
+   Themes
+   -------------------------------------------------------------------------- */
+.theme-white {
+  --bg: var(--white);
+  --surface: var(--smoke);
+}
+.theme-light {
+  --bg: var(--smoke);
+  --surface: var(--white);
+  --border: #dcdcdc;
+}
+.theme-dark {
+  --bg: var(--black);
+  --fg: var(--white);
+  --fg-muted: var(--muted-dark);
+  --border: var(--line-dark);
+  --surface: var(--graphite);
+}
+.theme-white,
+.theme-light,
+.theme-dark {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* --------------------------------------------------------------------------
+   Layout helpers
+   -------------------------------------------------------------------------- */
+.container {
+  width: 100%;
+  padding-inline: var(--gutter);
+  margin-inline: auto;
+  max-width: 1920px;
+}
+
+.section {
+  position: relative;
+  padding-block: var(--section-y);
+  scroll-margin-top: var(--header-h);
+}
+
+/* --------------------------------------------------------------------------
+   Typography helpers
+   -------------------------------------------------------------------------- */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-ui);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg);
+}
+.eyebrow__index {
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-muted);
+  letter-spacing: 0.08em;
+}
+.eyebrow__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--red);
+  flex: none;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-size: var(--fs-display);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+.h2 {
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: var(--tracking-display);
+}
+.h3 {
+  font-size: var(--fs-h3);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: var(--tracking-tight);
+}
+.lead {
+  font-size: var(--fs-lead);
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+}
+.muted {
+  color: var(--fg-muted);
+}
+.gold-text {
+  background: var(--gold-gradient);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+.theme-dark .gold-text {
+  background: linear-gradient(100deg, #d99a00, #f2bf3a 40%, #d99a00 70%, #f2bf3a);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+html.motion .gold-text--shimmer {
+  animation: gold-shimmer 7s ease-in-out infinite;
+}
+@keyframes gold-shimmer {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.text-link {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  text-decoration-color: currentColor;
+  transition:
+    text-decoration-color 0.2s,
+    text-decoration-thickness 0.2s;
+}
+.text-link:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Masked word/line reveal — SplitText names mask wrappers “<class>-mask”.
+   Extra bottom room stops descenders (g, y, p) being clipped at tight line-heights. */
+.split-word-mask,
+.split-line-mask {
+  overflow-clip-margin: 0.12em;
+  padding-bottom: 0.24em;
+  margin-bottom: -0.24em;
+}
+
+/* Elements animated in by GSAP start transparent only when motion is enabled & JS ran.
+   Opacity (not visibility) keeps them keyboard-focusable before they are revealed (WCAG 2.1.1). */
+html.motion [data-animate] {
+  opacity: 0;
+}
+html.motion.no-js [data-animate],
+html.reduce-motion [data-animate] {
+  opacity: 1 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Buttons — prokit "slide" button in brand black, turning red on hover
+   -------------------------------------------------------------------------- */
+.btn {
+  --btn-bg: var(--black);
+  --btn-fg: var(--white);
+  --btn-hover-bg: var(--red);
+  --btn-hover-fg: var(--white);
+  --btn-border: var(--black);
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 46px;
+  padding: 0 1.4rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--btn-border);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  transition:
+    color 0.45s var(--ease-out),
+    border-color 0.45s var(--ease-out);
+}
+.btn--sm {
+  min-height: 42px;
+  padding: 0 1.15rem;
+  font-size: 0.875rem;
+}
+.btn--lg {
+  min-height: 52px;
+  padding: 0 1.75rem;
+  font-size: 0.9375rem;
+}
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--btn-hover-bg);
+  transform: translateY(102%);
+  border-radius: 50% 50% 0 0 / 30% 30% 0 0;
+  transition:
+    transform 0.55s var(--ease-out),
+    border-radius 0.55s var(--ease-out);
+}
+.btn:hover::before,
+.btn:focus-visible::before {
+  transform: translateY(0);
+  border-radius: 0;
+}
+.btn:hover,
+.btn:focus-visible {
+  color: var(--btn-hover-fg);
+  border-color: var(--btn-hover-bg);
+}
+.btn--outline {
+  --btn-bg: transparent;
+  --btn-fg: var(--fg);
+  --btn-border: currentColor;
+}
+.theme-dark .btn--solid {
+  --btn-bg: var(--white);
+  --btn-fg: var(--black);
+  --btn-border: var(--white);
+}
+.theme-dark .btn--outline {
+  --btn-fg: var(--white);
+}
+
+.btn__roll {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  height: 1.2em;
+  line-height: 1.2em;
+}
+.btn__roll > span {
+  display: block;
+  transition: transform 0.55s var(--ease-out);
+}
+.btn__roll > span + span {
+  position: absolute;
+  inset: 0;
+  transform: translateY(105%);
+}
+.btn:hover .btn__roll > span:first-child,
+.btn:focus-visible .btn__roll > span:first-child {
+  transform: translateY(-105%);
+}
+.btn:hover .btn__roll > span + span,
+.btn:focus-visible .btn__roll > span + span {
+  transform: translateY(0);
+}
+.btn__icon {
+  width: 0.95em;
+  height: 0.95em;
+  flex: none;
+  transition: transform 0.45s var(--ease-out);
+}
+.btn:hover .btn__icon {
+  transform: translate(2px, -2px);
+}
+
+html.reduce-motion .btn::before,
+html.reduce-motion .btn__roll > span {
+  transition-duration: 0.01ms;
+}
+
+/* Text roll used by nav links */
+.roll {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+}
+.roll > span {
+  display: block;
+  transition: transform 0.6s var(--ease-out);
+}
+.roll > span + span {
+  position: absolute;
+  inset: 0;
+  transform: translateY(100%);
+}
+a:hover .roll > span:first-child,
+a:focus-visible .roll > span:first-child,
+button:hover .roll > span:first-child {
+  transform: translateY(-100%);
+}
+a:hover .roll > span + span,
+a:focus-visible .roll > span + span,
+button:hover .roll > span + span {
+  transform: translateY(0);
+}
+
+/* Underline link (prokit line-link) */
+.line-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: var(--fs-small);
+  padding-block: 0.35rem;
+}
+.line-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1.5px;
+  background: currentColor;
+  transform-origin: right;
+  transition: transform 0.6s var(--ease-out);
+}
+.line-link:hover::after {
+  transform: scaleX(0);
+}
+.line-link:hover::after {
+  animation: line-redraw 0.9s var(--ease-out) forwards;
+}
+@keyframes line-redraw {
+  0% {
+    transform: scaleX(1);
+    transform-origin: right;
+  }
+  45% {
+    transform: scaleX(0);
+    transform-origin: right;
+  }
+  46% {
+    transform-origin: left;
+  }
+  100% {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Page shell (pushed aside when the menu opens)
+   -------------------------------------------------------------------------- */
+.page-shell {
+  position: relative;
+  background: var(--white);
+  transform-origin: 0% 50%;
+  transition:
+    transform 0.9s var(--ease-in-out),
+    border-radius 0.9s var(--ease-in-out),
+    filter 0.9s var(--ease-in-out);
+}
+html.menu-open .page-shell {
+  transform: translateX(clamp(0px, 24vw, 360px)) scale(0.96);
+  border-radius: 28px;
+  overflow: clip;
+}
+html.reduce-motion .page-shell {
+  transition: none;
+}
+@media (max-width: 900px) {
+  html.menu-open .page-shell {
+    transform: none;
+    border-radius: 0;
+  }
+}
+
+/* Rich text */
+.prose {
+  max-width: 72ch;
+  font-size: var(--fs-body);
+}
+.prose > * + * {
+  margin-top: 1.1em;
+}
+.prose h2 {
+  font-size: var(--fs-h4);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-top: 2.2em;
+}
+.prose h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 1.8em;
+}
+.prose ul {
+  list-style: none;
+  padding-left: 0;
+}
+.prose ul li {
+  position: relative;
+  padding-left: 1.4em;
+}
+.prose ul li + li {
+  margin-top: 0.6em;
+}
+.prose ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.7em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--black);
+}
+.prose a {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:not(.motion) *,
+  html:not(.motion) *::before,
+  html:not(.motion) *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+html.reduce-motion *,
+html.reduce-motion *::before,
+html.reduce-motion *::after {
+  animation-play-state: paused !important;
+}
+
+.back-to-top-icon {
+  width: 16px;
+  height: 16px;
+  transform: rotate(-90deg);
+}
+
+.eyebrow__text {
+  display: inline-block;
+  min-width: 1ch;
+  min-height: 1em;
+}
+
+/* Footer reveal: the page's rounded bottom edge overlaps the dark footer, which sits just beneath it.
+   (Normal flow, so a footer taller than the screen can still be scrolled through.) */
+:root {
+  --shell-radius: 2.5rem;
+}
+@media (max-width: 900px) {
+  :root {
+    --shell-radius: 1.5rem;
+  }
+}
+.page-shell > main {
+  position: relative;
+  z-index: 1;
+  background: var(--white);
+  border-radius: 0 0 var(--shell-radius) var(--shell-radius);
+  overflow: clip;
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.35);
+}
+.page-shell > footer {
+  position: relative;
+  z-index: 0;
+  margin-top: calc(var(--shell-radius) * -1);
+  --footer-overlap: var(--shell-radius);
+}

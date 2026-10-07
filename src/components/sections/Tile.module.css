@@ -1,0 +1,40 @@
+.tile {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #0b0b0b;
+  color: #fff;
+  flex: none;
+  isolation: isolate;
+}
+.light {
+  background: #efefef;
+  color: var(--black);
+}
+.text {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.85rem 0.95rem 0.9rem;
+  background: linear-gradient(to top, rgba(7, 7, 7, 0.82), rgba(7, 7, 7, 0));
+}
+.light .text {
+  background: linear-gradient(to top, rgba(245, 245, 245, 0.95), rgba(245, 245, 245, 0));
+}
+.meta {
+  font-family: var(--font-ui);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+}

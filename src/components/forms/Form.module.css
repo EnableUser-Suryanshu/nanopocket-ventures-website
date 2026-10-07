@@ -1,0 +1,514 @@
+/* Shared form styling — works on light and dark sections via theme variables.
+   Field labels are deliberately smaller than section titles (client feedback). */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.progressHead {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+.counter {
+  flex: none;
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+.counterTotal {
+  color: var(--fg-muted);
+}
+.progress {
+  position: relative;
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+  overflow: hidden;
+  border-radius: 2px;
+}
+.progress span {
+  position: absolute;
+  inset: 0;
+  background: var(--fg);
+  transform-origin: left;
+  transition: transform 0.8s var(--ease-out);
+}
+
+.stepTitle {
+  font-size: var(--fs-h4);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.stepTitle:focus {
+  outline: none;
+}
+.stepBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.question {
+  display: block;
+  padding: 0;
+  margin-bottom: 1rem;
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+}
+.req {
+  color: inherit;
+}
+.optional {
+  font-weight: 400;
+  color: var(--fg-muted);
+  font-size: 0.875rem;
+}
+
+/* Large radio tiles */
+.options {
+  display: grid;
+  gap: 0.6rem;
+}
+.option {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  min-height: 56px;
+  padding: 0.95rem 1.1rem;
+  border-radius: 14px;
+  border: 1.5px solid var(--border);
+  cursor: pointer;
+  transition:
+    border-color 0.3s,
+    background-color 0.3s;
+}
+.option:hover {
+  border-color: var(--fg-muted);
+}
+.optionOn {
+  border-color: var(--fg);
+  background: color-mix(in srgb, var(--fg) 6%, transparent);
+}
+.option:has(.radio:focus-visible),
+.chip:has(.radio:focus-visible) {
+  outline: 3px solid var(--fg);
+  outline-offset: 3px;
+}
+.radio {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+.optionIndex {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--fg-muted);
+}
+.optionLabel {
+  font-size: 1rem;
+  line-height: 1.45;
+}
+.optionCheck {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  color: transparent;
+  transition: all 0.3s;
+}
+.optionCheck svg {
+  width: 14px;
+  height: 14px;
+}
+.optionOn .optionCheck {
+  background: var(--fg);
+  border-color: var(--fg);
+  color: var(--bg);
+}
+
+/* Chips (sector / stage) */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.55rem 1.05rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--border);
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition:
+    border-color 0.3s,
+    background-color 0.3s,
+    color 0.3s;
+}
+.chip:hover {
+  border-color: var(--fg-muted);
+}
+.chipOn {
+  background: var(--fg);
+  border-color: var(--fg);
+  color: var(--bg);
+}
+
+/* Text inputs — prokit underline style */
+.grid2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.75rem 2rem;
+}
+.grid2 > :nth-child(3) {
+  grid-column: 1 / -1;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.label {
+  display: block;
+  padding: 0;
+  margin-bottom: 0.35rem;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+.help {
+  font-size: 0.875rem;
+  color: var(--fg-muted);
+  margin-bottom: 0.35rem;
+}
+.input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.6rem 0;
+  border: 0;
+  border-bottom: 1.5px solid var(--border);
+  border-radius: 0;
+  background: transparent;
+  font-size: 1.0625rem;
+  color: var(--fg);
+  transition: border-color 0.3s;
+  appearance: none;
+}
+.input::placeholder {
+  color: var(--fg-muted);
+  opacity: 0.8;
+}
+.input:hover {
+  border-bottom-color: var(--fg-muted);
+}
+.input:focus {
+  outline: none;
+  border-bottom-color: var(--fg);
+  box-shadow: 0 1.5px 0 0 var(--fg);
+}
+.input:focus-visible {
+  outline: none;
+  border-radius: 0;
+  box-shadow: 0 1.5px 0 0 var(--fg);
+}
+.input[aria-invalid='true'] {
+  border-bottom-color: var(--fg);
+  border-bottom-style: dashed;
+}
+.textarea {
+  resize: vertical;
+  min-height: 112px;
+  line-height: 1.55;
+}
+select.input {
+  cursor: pointer;
+  background-image:
+    linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 55%,
+    calc(100% - 9px) 55%;
+  background-size:
+    5px 5px,
+    5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 2rem;
+}
+select.input option {
+  color: #050505;
+}
+
+/* Errors: icon + text, never colour alone */
+.error {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.error::before {
+  content: '!';
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--fg);
+  color: var(--bg);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.formError {
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  border: 1.5px solid var(--fg);
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.notice {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1.25rem 1.4rem;
+  border-radius: 16px;
+  border: 1.5px solid var(--fg);
+  background: color-mix(in srgb, var(--fg) 5%, transparent);
+  font-size: 0.975rem;
+  line-height: 1.6;
+}
+.noticeLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+}
+
+/* File drop */
+.drop {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  margin-top: 0.4rem;
+  border-radius: 16px;
+  border: 1.5px dashed var(--fg-muted);
+  transition:
+    border-color 0.3s,
+    background-color 0.3s;
+}
+.dropOver {
+  border-color: var(--fg);
+  background: color-mix(in srgb, var(--fg) 6%, transparent);
+}
+.dropFilled {
+  border-style: solid;
+  border-color: var(--fg);
+}
+.dropError {
+  border-color: var(--fg);
+}
+.dropIcon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--fg);
+  color: var(--bg);
+}
+.dropIcon svg {
+  width: 20px;
+  height: 20px;
+}
+.dropText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  font-size: 0.9375rem;
+}
+.dropText strong {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dropText span {
+  color: var(--fg-muted);
+  font-size: 0.8125rem;
+}
+.browse {
+  cursor: pointer;
+}
+.fileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+}
+.drop:has(.fileInput:focus-visible) .browse {
+  outline: 3px solid var(--fg);
+  outline-offset: 3px;
+}
+
+/* Checkbox */
+.consent {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 0.85rem;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  cursor: pointer;
+}
+.checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+.checkboxBox {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  margin-top: 0.1rem;
+  border-radius: 6px;
+  border: 1.5px solid var(--fg);
+  color: transparent;
+  transition:
+    background-color 0.25s,
+    color 0.25s;
+}
+.checkboxBox svg {
+  width: 14px;
+  height: 14px;
+}
+.checkbox:checked + .checkboxBox {
+  background: var(--fg);
+  color: var(--bg);
+}
+.checkbox:focus-visible + .checkboxBox {
+  outline: 3px solid var(--fg);
+  outline-offset: 3px;
+}
+
+.requiredNote {
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 0.5rem;
+}
+.nav :global(.btn[disabled]) {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.nav :global(.btn[disabled])::before {
+  display: none;
+}
+.upload {
+  height: 2px;
+  background: var(--border);
+  overflow: hidden;
+}
+.upload span {
+  display: block;
+  height: 100%;
+  background: var(--fg);
+  transform-origin: left;
+  transition: transform 0.2s linear;
+}
+
+.hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Success */
+.success {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: clamp(1.5rem, 3vw, 2.5rem) 0;
+}
+.successIcon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--fg);
+  color: var(--bg);
+}
+.successIcon svg {
+  width: 30px;
+  height: 30px;
+}
+.successTitle {
+  font-size: var(--fs-h3);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+.successTitle:focus {
+  outline: none;
+}
+.successBody {
+  max-width: 44ch;
+  font-size: var(--fs-lead);
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
+
+@media (max-width: 640px) {
+  .grid2 {
+    grid-template-columns: 1fr;
+  }
+  .drop {
+    grid-template-columns: auto 1fr;
+  }
+  .browse {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}

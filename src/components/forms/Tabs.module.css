@@ -1,0 +1,68 @@
+.wrap {
+  position: relative;
+}
+.anchor {
+  position: absolute;
+  top: calc(-1 * var(--header-h) - 1rem);
+}
+.tablist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.35rem;
+  margin-bottom: 2rem;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  width: fit-content;
+  max-width: 100%;
+}
+.tab {
+  min-height: 44px;
+  padding: 0 1.25rem;
+  border-radius: 999px;
+  font-family: var(--font-ui);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--fg);
+  transition:
+    background-color 0.35s var(--ease-out),
+    color 0.35s var(--ease-out);
+}
+.tab:hover {
+  background: color-mix(in srgb, var(--fg) 8%, transparent);
+}
+.tabOn,
+.tabOn:hover {
+  background: var(--fg);
+  color: var(--bg);
+}
+.panel:focus-visible {
+  outline-offset: 8px;
+}
+.intro {
+  max-width: 52ch;
+  color: var(--fg-muted);
+}
+.fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.75rem 2rem;
+}
+.full {
+  grid-column: 1 / -1;
+}
+.half {
+  grid-column: span 1;
+}
+@media (max-width: 640px) {
+  .fields {
+    grid-template-columns: 1fr;
+  }
+  .half {
+    grid-column: 1 / -1;
+  }
+  .tablist {
+    border-radius: 18px;
+  }
+}

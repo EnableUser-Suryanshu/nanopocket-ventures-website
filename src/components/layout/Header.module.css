@@ -1,0 +1,136 @@
+.header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 100;
+  height: var(--header-h);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem;
+  padding-inline: var(--gutter);
+  background: rgba(255, 255, 255, 0.82);
+  -webkit-backdrop-filter: blur(16px) saturate(1.5);
+  backdrop-filter: blur(16px) saturate(1.5);
+  border-bottom: 1px solid transparent;
+  transition:
+    transform 0.7s var(--ease-in-out),
+    border-color 0.3s ease,
+    background-color 0.3s ease;
+}
+.scrolled {
+  border-bottom-color: var(--line);
+  background: rgba(255, 255, 255, 0.92);
+}
+.hidden {
+  transform: translateY(-101%);
+}
+
+.left {
+  justify-self: start;
+  display: flex;
+  align-items: center;
+}
+
+.menuButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 0.35rem 0 0;
+  font-family: var(--font-ui);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 999px;
+}
+.burger {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--black);
+  transition:
+    background-color 0.4s var(--ease-out),
+    transform 0.5s var(--ease-out);
+}
+.burger span {
+  position: absolute;
+  width: 16px;
+  height: 1.6px;
+  border-radius: 2px;
+  background: var(--white);
+  transition:
+    transform 0.5s var(--ease-out),
+    width 0.5s var(--ease-out);
+}
+.burger span:first-child {
+  transform: translateY(-3.5px);
+}
+.burger span:last-child {
+  transform: translateY(3.5px);
+  width: 10px;
+  margin-left: -6px;
+}
+.menuButton:hover .burger {
+  background: var(--red);
+  transform: scale(1.06);
+}
+.menuButton:hover .burger span:last-child {
+  width: 16px;
+  margin-left: 0;
+}
+
+.logo {
+  justify-self: center;
+  display: block;
+  width: clamp(160px, 11vw, 190px);
+  padding: 6px;
+  border-radius: 8px;
+}
+.logoSvg {
+  width: 100%;
+  height: auto;
+}
+
+.right {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@media (max-width: 1180px) {
+  .right .cta:not(.ctaMobile) {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .menuLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  .header {
+    grid-template-columns: 44px 1fr auto;
+    gap: 0.5rem;
+  }
+  .logo {
+    width: 172px;
+  }
+}
+
+@media (max-width: 420px) {
+  .header {
+    grid-template-columns: 44px 1fr 44px;
+  }
+  .right .ctaMobile {
+    display: none;
+  }
+}

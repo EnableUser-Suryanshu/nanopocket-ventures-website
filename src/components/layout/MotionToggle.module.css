@@ -1,0 +1,38 @@
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 44px;
+  font-family: var(--font-ui);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--black);
+  border-radius: 999px;
+}
+.icon {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+.icon svg {
+  width: 11px;
+  height: 11px;
+}
+.toggle:hover .icon {
+  background: var(--black);
+  color: var(--white);
+}
+.dark {
+  color: #fff;
+}
+.dark:hover .icon {
+  background: #fff;
+  color: #050505;
+}

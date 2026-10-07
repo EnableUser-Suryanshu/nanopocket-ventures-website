@@ -1,0 +1,361 @@
+.thesis {
+  position: relative;
+  overflow: clip;
+}
+
+/* Key facts */
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 0;
+  border-top: 1px solid var(--border);
+  margin-bottom: clamp(2.25rem, 4vw, 3.5rem);
+}
+.fact {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 0.75rem;
+  padding: clamp(1.25rem, 2vw, 1.75rem) clamp(1rem, 3vw, 3rem) clamp(1.25rem, 2vw, 1.75rem) 0;
+  border-bottom: 1px solid var(--border);
+}
+.fact + .fact {
+  padding-left: clamp(1rem, 3vw, 3rem);
+  border-left: 1px solid var(--border);
+}
+.factLabel {
+  font-family: var(--font-ui);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.factValue {
+  font-size: clamp(2.1rem, 3vw + 0.6rem, 3.75rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: var(--tracking-display);
+}
+.factNote {
+  font-size: var(--fs-small);
+  color: var(--fg-muted);
+}
+
+.intro {
+  max-width: 52ch;
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+/* Optional phrases band */
+.band {
+  border-block: 1px solid var(--border);
+  padding-block: 1.1rem;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+.bandItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 2rem;
+  padding-right: 2rem;
+  font-size: var(--fs-h4);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+.bandDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: var(--red);
+}
+
+/* Giant outline marquee (prokit “Portofolio”), driven by scroll velocity */
+.listHead {
+  overflow: hidden;
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+  pointer-events: none;
+}
+.listTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  padding-right: 0.25em;
+  font-size: clamp(3.5rem, 10vw, 10.5rem);
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--black);
+  white-space: nowrap;
+}
+.listStar {
+  font-size: 0.32em;
+  color: var(--red);
+  -webkit-text-stroke: 0;
+}
+:global(.theme-dark) .listTitle {
+  -webkit-text-stroke-color: #fff;
+}
+
+/* Rows */
+.list {
+  position: relative;
+}
+.row {
+  position: relative;
+}
+/* Focus effect: the hovered row stays, the rest recede (on the button — GSAP owns the row’s opacity) */
+.list:has(.trigger:hover) .row:not(:has(.trigger:hover)):not(.open) .trigger {
+  opacity: 0.3;
+}
+.rule {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--border);
+}
+.row:last-child::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--border);
+}
+
+.rowHeading {
+  font: inherit;
+}
+.trigger {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 48px;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  padding: clamp(1.1rem, 1.8vw, 1.6rem) 0;
+  text-align: left;
+  border-radius: 6px;
+  transition: opacity 0.5s var(--ease-out);
+}
+.meta {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  font-family: var(--font-ui);
+  font-size: var(--fs-small);
+  font-weight: 600;
+}
+.index {
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+.category {
+  letter-spacing: 0.02em;
+}
+.name {
+  font-size: clamp(1.4rem, 1.9vw + 0.6rem, 2.6rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: var(--tracking-display);
+  text-align: right;
+  transition: transform 0.6s var(--ease-out);
+}
+.trigger:hover .name,
+.trigger:focus-visible .name {
+  transform: translateX(-0.25em);
+}
+.icon {
+  justify-self: end;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  transition:
+    transform 0.6s var(--ease-out),
+    background-color 0.3s,
+    color 0.3s;
+}
+.icon svg {
+  width: 18px;
+  height: 18px;
+}
+.trigger:hover .icon {
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--black);
+}
+.open .icon {
+  transform: rotate(45deg);
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--black);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.1rem;
+  margin: 0;
+  font-size: var(--fs-small);
+  color: var(--fg-muted);
+}
+.tags li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.tagDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* Expanded panel */
+.panelInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  gap: clamp(1.5rem, 4vw, 4.5rem);
+  padding: 0.25rem 0 clamp(1.5rem, 3vw, 2.5rem);
+}
+.panelArt {
+  aspect-ratio: 4 / 3;
+  max-width: 360px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  align-self: start;
+}
+.panelBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+.summary {
+  max-width: 48ch;
+}
+.notes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 1.25rem 2rem;
+}
+.note {
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+.note dt {
+  font-family: var(--font-ui);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+.note dd {
+  font-size: 0.975rem;
+  line-height: 1.6;
+}
+.pending {
+  font-family: var(--font-ui);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+
+/* Other themes */
+.otherInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.6fr) minmax(0, 1fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: clamp(1.25rem, 2vw, 1.75rem) 0;
+}
+.otherTitle {
+  font-size: var(--fs-h4);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.otherText {
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  color: var(--fg);
+}
+.otherLink {
+  font-weight: 600;
+}
+
+/* Cursor preview — outer layer follows the pointer (GSAP), inner card animates in/out (CSS) */
+.preview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  width: 320px;
+  aspect-ratio: 4 / 5;
+  margin: -200px 0 0 -160px;
+  pointer-events: none;
+}
+.previewCard {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(0.6) rotate(-8deg);
+  transition:
+    opacity 0.35s ease,
+    transform 0.6s var(--ease-out);
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.45);
+}
+.previewOn {
+  opacity: 1;
+  transform: none;
+}
+.previewItem {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.previewActive {
+  opacity: 1;
+}
+
+@media (max-width: 900px) {
+  .trigger {
+    grid-template-columns: minmax(0, 1fr) 48px;
+    grid-template-areas: 'meta icon' 'name name';
+    gap: 0.75rem 1rem;
+  }
+  .trigger .meta {
+    grid-area: meta;
+  }
+  .name {
+    grid-area: name;
+    text-align: left;
+  }
+  .icon {
+    grid-area: icon;
+    width: 44px;
+    height: 44px;
+  }
+  .tags {
+    justify-content: flex-start;
+  }
+  .panelInner {
+    grid-template-columns: 1fr;
+  }
+  .otherInner {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  .fact + .fact {
+    padding-left: 0;
+    border-left: 0;
+  }
+}

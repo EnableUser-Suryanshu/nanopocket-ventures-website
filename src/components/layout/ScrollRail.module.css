@@ -1,0 +1,62 @@
+.rail {
+  position: fixed;
+  top: 50%;
+  right: clamp(0.75rem, 1.4vw, 1.5rem);
+  z-index: 90;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  transform: translateY(-50%);
+  color: #fff;
+  mix-blend-mode: difference;
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-out);
+  pointer-events: none;
+}
+.rail[data-visible] {
+  opacity: 1;
+}
+.index {
+  font-family: var(--font-ui);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+}
+.track {
+  position: relative;
+  width: 1px;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.35);
+}
+.fill {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  transform-origin: top;
+}
+.label {
+  font-family: var(--font-ui);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  white-space: nowrap;
+  animation: rail-in 0.7s var(--ease-out);
+}
+@keyframes rail-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+@media (min-width: 1200px) {
+  .rail {
+    display: flex;
+  }
+}
+:global(html.reduce-motion) .label {
+  animation: none;
+}

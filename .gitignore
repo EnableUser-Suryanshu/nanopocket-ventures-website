@@ -48,3 +48,14 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# client brief assets (not part of the app)
+_brief/
+/data/*.db*
+/media/
+
+/private/
+/data/
+
+# local tooling
+.claude/
