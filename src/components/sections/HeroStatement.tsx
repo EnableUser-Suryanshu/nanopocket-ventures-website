@@ -1,9 +1,7 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 
-import { RENDERS } from '@/components/art/renders'
-import { Visual } from '@/components/art/Visual'
 import { Logo } from '@/components/brand/Logo'
 import { MotionToggle } from '@/components/layout/MotionToggle'
 import { useMotion } from '@/components/providers/MotionProvider'
@@ -17,56 +15,6 @@ import styles from './HeroStatement.module.css'
 import { Tile, type TileData } from './Tile'
 
 const COLS = 5
-const PILL_SLIDES = 6
-const PILL_INTERVAL = 2400
-
-/**
- * The photo inside the headline (Prokit “photo in text”): an uploaded image, or a reel of the
- * 3D renders that wipes to the next one every few seconds. Stops when motion is paused or off-screen.
- */
-function PhotoPill({ image, arts }: { image: HeroBlock['inlineImage']; arts: string[] }) {
-  const ref = useRef<HTMLSpanElement>(null)
-  const { reduced } = useMotion()
-  const [active, setActive] = useState(0)
-  const uploaded = image && typeof image === 'object'
-  const count = uploaded ? 1 : arts.length
-
-  useEffect(() => {
-    const el = ref.current
-    if (reduced || count < 2 || !el) return
-    let timer = 0
-    const io = new IntersectionObserver(([entry]) => {
-      window.clearInterval(timer)
-      if (entry.isIntersecting) {
-        timer = window.setInterval(() => setActive((a) => (a + 1) % count), PILL_INTERVAL)
-      }
-    })
-    io.observe(el)
-    return () => {
-      io.disconnect()
-      window.clearInterval(timer)
-    }
-  }, [reduced, count])
-
-  return (
-    <span ref={ref} className={styles.pill} data-pill="">
-      {uploaded ? (
-        <Visual image={image} sizes="240px" priority />
-      ) : (
-        arts.map((art, i) => (
-          <span
-            key={art}
-            className={styles.slide}
-            data-state={i === active ? 'on' : i === (active - 1 + count) % count ? 'out' : 'in'}
-          >
-            <Visual art={art} sizes="240px" priority={i === 0} />
-          </span>
-        ))
-      )}
-    </span>
-  )
-}
-
 /**
  * Prokit’s signature opening: the hero (stacked tagline + tilted moving wall) pins, slides sideways,
  * the wall swings flat and becomes the backdrop, and the white statement card glides in and shrinks.
@@ -82,19 +30,14 @@ export function HeroStatement({
   const { reduced, introDone } = useMotion()
   const fullTagline = `${hero.lineOne} ${hero.highlight} ${hero.lineTwo}`
   const tiles: TileData[] = (hero.tiles?.length ? hero.tiles : statement?.tiles) || []
-  // Pill reel: the chosen inline render first, then the wall's renders (photographic ones only)
-  const pillArts = [hero.inlineArt, ...tiles.map((t) => t.art)]
-    .filter((a): a is string => Boolean(a && RENDERS[a] && a !== 'bannerGlobe'))
-    .filter((a, i, all) => all.indexOf(a) === i)
-    .slice(0, PILL_SLIDES)
   const columns = Array.from({ length: COLS }, (_, c) => tiles.filter((_, i) => i % COLS === c))
   const lines = statement?.lines || []
   const plain = lines.map((l) => [l.before, l.after].filter(Boolean).join(' ')).join(' ')
 
   /*
    * Intro (after the preloader), as on Prokit: each line’s letters rise one by one out of the line’s
-   * mask while fading in, line after line; then the photo opens in front of “Discover” and pushes it
-   * along, the caption (if any) fades in and the red underline draws.
+   * mask while fading in, line after line (small → bigger → biggest); then the red underline draws and
+   * the caption (if any) fades in.
    */
   useGSAP(
     () => {
@@ -151,23 +94,17 @@ export function HeroStatement({
           wordSplit?.revert()
           word?.classList.add(...goldClasses)
         }, 1.75)
-        .fromTo(
-          q('[data-pill]'),
-          { width: 0, marginRight: 0 },
-          { width: '15vw', marginRight: '0.2em', duration: 1.2, ease: 'expo.inOut' },
-          1.45,
-        )
-        .from(q('[data-caption]'), { y: 14, opacity: 0, duration: 0.9, ease: 'power3.out' }, 2.05)
+        .from(q('[data-caption]'), { y: 14, opacity: 0, duration: 0.9, ease: 'power3.out' }, 1.6)
         .fromTo(
           q('[data-swoosh]'),
           { clipPath: 'inset(0 100% 0 0)' },
           { clipPath: 'inset(0 0% 0 0)', duration: 1.1, ease: 'power3.inOut' },
-          1.85,
+          1.35,
         )
         .from(
           q('[data-fade]'),
           { y: 16, opacity: 0, duration: 0.9, stagger: 0.07, ease: 'power3.out' },
-          2.1,
+          1.7,
         )
         .from(
           q('[data-column]'),
@@ -301,9 +238,6 @@ export function HeroStatement({
                   {hero.lineOne}
                 </span>
                 <span className={styles.row}>
-                  {(pillArts.length > 0 || hero.inlineImage) && (
-                    <PhotoPill image={hero.inlineImage} arts={pillArts} />
-                  )}
                   <span className={styles.highlight} data-highlight="" data-animate="">
                     <span className="gold-text gold-text--shimmer" data-highlight-text="">
                       {hero.highlight}

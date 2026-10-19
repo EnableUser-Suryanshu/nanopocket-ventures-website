@@ -6,7 +6,10 @@
 
 .scene {
   /* Prokit-scale headline: three equal lines, staggered by the photo */
-  --fs-hero-xl: clamp(2.6rem, 6.6vw + 0.1rem, 8.5rem);
+  /* Three steps, small → bigger → biggest: the last line sets the scale */
+  --fs-hero-xl: clamp(2.6rem, 7.4vw, 9.5rem);
+  --fs-hero-1: calc(var(--fs-hero-xl) * 0.5);
+  --fs-hero-2: calc(var(--fs-hero-xl) * 0.74);
   position: relative;
   background: var(--white);
 }
@@ -45,72 +48,20 @@
 }
 .lineOne {
   display: block;
-  font-size: var(--fs-hero-xl);
+  margin-bottom: 0.22em;
+  font-size: var(--fs-hero-1);
   font-weight: 400;
-  line-height: 0.94;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
 }
 .row {
   display: flex;
   align-items: center;
-  font-size: var(--fs-hero-xl);
-  line-height: 0.94;
+  margin-bottom: 0.06em;
+  font-size: var(--fs-hero-2);
+  line-height: 1;
 }
 
-/* Photo in the headline — a reel of renders that wipes upwards to the next one */
-.pill {
-  position: relative;
-  display: block;
-  flex: none;
-  width: 15vw;
-  height: 0.8em;
-  margin: 0.06em 0.2em 0 0;
-  border-radius: 0.06em;
-  overflow: hidden;
-  background: #ececec;
-  isolation: isolate;
-}
-.pill::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  border-radius: inherit;
-  box-shadow: inset 0 0 0 1px rgba(5, 5, 5, 0.1);
-  pointer-events: none;
-}
-.pill img,
-.pill :global(svg) {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-.slide {
-  position: absolute;
-  inset: 0;
-  display: block;
-  transition:
-    clip-path 0.9s var(--ease-in-out),
-    transform 1.4s var(--ease-out);
-}
-.slide[data-state='in'] {
-  clip-path: inset(100% 0 0 0);
-  transform: scale(1.3);
-}
-.slide[data-state='on'] {
-  z-index: 2;
-  clip-path: inset(0 0 0 0);
-  transform: scale(1);
-}
-.slide[data-state='out'] {
-  z-index: 1;
-  clip-path: inset(0 0 100% 0);
-}
-/* Collapsed / undrawn until the intro plays (see HeroStatement intro) */
-:global(html.motion:not(.no-js)) .pill {
-  width: 0;
-  margin-right: 0;
-}
 :global(html.motion:not(.no-js)) .swoosh {
   clip-path: inset(0 100% 0 0);
 }
@@ -400,13 +351,13 @@
     /* angled so the photos stay clear of the text block’s stepped right edge */
     -webkit-mask-image: linear-gradient(
       72deg,
-      transparent calc(var(--fade) * 64%),
-      #000 calc(var(--fade) * 80%)
+      transparent calc(var(--fade) * 70%),
+      #000 calc(var(--fade) * 86%)
     );
     mask-image: linear-gradient(
       72deg,
-      transparent calc(var(--fade) * 64%),
-      #000 calc(var(--fade) * 80%)
+      transparent calc(var(--fade) * 70%),
+      #000 calc(var(--fade) * 86%)
     );
   }
   :global(html.motion:not(.no-js)) .wall {
@@ -504,6 +455,11 @@
 
 /* Phones: the caption drops under the last line */
 @media (max-width: 700px) {
+  /* gentler steps on a narrow screen so the first line stays comfortably readable */
+  .scene {
+    --fs-hero-1: calc(var(--fs-hero-xl) * 0.62);
+    --fs-hero-2: calc(var(--fs-hero-xl) * 0.82);
+  }
   .lastRow {
     display: block;
   }
